@@ -38,7 +38,11 @@ module Jah
     end
 
     def self.start
-      new
+      if File.exists?(PID_FILE)
+        puts "Jah already running...#{PID_FILE}"
+      else
+        new
+      end
     end
 
     def self.stop
@@ -54,10 +58,11 @@ module Jah
 
     def self.restart
       stop
+      sleep 2
       start
     end
 
-    def self.install
+    def self.config
       Install.new
     end
 

@@ -39,14 +39,14 @@ module Jah
         opts.banner = <<BANNER
 Jah Gem Usage:
 
-jah [command] [opts] -c [config file]
+jah [command] [opts]
 
 Commands:
 
    start
    stop
    restart
-   install
+   config
 
 BANNER
         opts.separator "Config file:"
@@ -95,7 +95,7 @@ BANNER
     def self.dispatch(argv)
       Jah::Opt.merge! autoload_config(parse_options(argv))
       if comm = argv.shift
-        Jah::Agent.send(comm) rescue puts "Command not found: #{comm}"
+        Jah::Agent.send(comm) rescue puts "Command not found: #{comm} #{@usage}"
       else
         Jah.mode ? Jah::Agent.start : Install.new
       end

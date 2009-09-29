@@ -128,9 +128,14 @@ module Jah
       end
 
       client.register_handler :message, :groupchat? do |m|
-        if m.body =~ /^!|^>|^\\/ && m.to_s !~ /x.*:delay/ #delay.nil?
+        if m.body =~ Regexp.new(Jah.hostname)
+          body = m.body.split(":")[-1].strip
+        else
+          body = m.body
+        end
+        if m.body =~ /^!|^>|^\\|#{Jah.hostname}/ && m.to_s !~ /x.*:delay/ #delay.nil?
           puts "[GROUP] => #{m.inspect}"
-          for msg in process_message(m.from.stripped, m.body, :groupchat)
+          for msg in process_message(m.from.stripped, body, :groupchat)
             client.write msg
           end
         end
