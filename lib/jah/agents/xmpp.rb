@@ -93,7 +93,7 @@ module Jah
     def setup
       #  return if client && client.setup?
       client.register_handler(:ready) do
-        puts "Connected ! send messages to #{client.jid.stripped}."
+        puts "Connected!"
         ROSTER << [client.roster.items.keys, Jah.groups].flatten.uniq
         ROSTER.flatten!
         ROSTER.select { |j| j =~ /\@conference\./ }.each do |c|
@@ -149,7 +149,7 @@ module Jah
 
 
     def run
-      puts "Running XMPP...#{client}"
+      puts "Starting Jah Client...#{client.jid.stripped}"
       trap(:INT) { EM.stop }
       trap(:TERM) { EM.stop }
 

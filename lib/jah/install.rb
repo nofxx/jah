@@ -1,7 +1,7 @@
 #
 #  Jah Install Wizard
 #
-# TODO: i18n
+# TODO: i18n and/to remove <<FOO FOO from ALL THIS !!!!!!!
 #
 module Jah
   class Install < Cli
@@ -100,9 +100,12 @@ END_INTRO
 Enter the domain Jah will use for XMPP connect and conference search.
 
 END_INTRO
+
+      d = @config[:jid].split("@")[1]
       print "Your host address"
-      print @config[:jid] ? " (#{@config[:jid].split("@")[1]}):" : " :"
+      print d ? " (#{d}): " : ": "
       @config[:host] = gets.strip
+      @config[:host] = d if @config[:host] == ""
     end
 
     #
@@ -182,24 +185,11 @@ END_INTRO
 Report my status from time to time to ppl on the roster?
 
 END_INTRO
+
       print "Report interval in seconds (0 to disable): "
       @config[:report] = gets.to_s.strip.to_i
     end
 
-    #
-    #  SUCCESS!
-    #
-    #
-    def success!
-      puts <<-END_SUCCESS.gsub(/^ {10}/, "")
-
-== Success! ==
-
-Jah has been setup and it`s running.
-
-END_SUCCESS
-    daemon = gets.to_s.strip
-    end
 
     #
     #  CRONTAB
@@ -227,6 +217,7 @@ For help setting up Scout with crontab, please visit:
 http://scoutapp.com/help#cron
 
 CRON
+
     end
 
 
@@ -236,7 +227,8 @@ CRON
     #
     def duck_talk
       locs = I18n.available_locales.map { |l| l.to_s.downcase }
-      puts <<-END_SUCCESS.gsub(/^ {10}/, "")
+      puts <<-END_I18N.gsub(/^ {10}/, "")
+
 == Machine Personality ==
 
 Jah goes a lil further than localization, you can make your machine talk to
@@ -246,12 +238,29 @@ Available options:
 
 * #{locs.join("\n* ")}
 
-END_SUCCESS
+END_I18N
       print "Choose one (#{Jah.locale}): "
       @config[:i18n] = gets.to_s.strip.downcase
       @config[:i18n] = Jah.locale if @config[:i18n] == ""
     end
 
+    #
+    #  SUCCESS!
+    #
+    #
+    def success!
+      puts <<-END_SUCCESS.gsub(/^ {10}/, "")
+
+== Success! ==
+
+Jah config file was written to #{@outfile}.
+
+Just run `jah` to start it!
+
+END_SUCCESS
+
+    daemon = gets.to_s.strip
+    end
 
     #
     #  FAIL
@@ -271,14 +280,16 @@ END_ERROR
     def write_down
       outfile = "jah.yaml"
       template = File.read(File.join(File.dirname(__FILE__), '..', 'jah.yaml.template'))
-      outfile =  File.writable?("/etc/") ? "/etc/" + outfile : HOME + outfile
-      puts "Writing config to #{outfile}.."
+      @outfile =  File.writable?("/etc/") ? "/etc/" + outfile : HOME + outfile
+      puts "Writing config to #{@outfile}.."
       @config.keys.each { |k| template.gsub!(/#{k.to_s.upcase}/, @config[k].to_s) }
-      File.open(outfile, "w") { |f| f.write template }
+      File.open(@outfile, "w") { |f| f.write template }
     end
 
-    def run
+    def initialize
       abort usage unless $stdin.tty?
+      puts "No config file found.. running install.."
+
       @config = {}
       @config[:host] = Jah.hostname
       get_mode
@@ -291,11 +302,15 @@ END_ERROR
         @config[:jid] = ''
         get_key
       end
-      unless use_god?
-        unless daemonize?
-          show_crontab
-        end
-      end
+
+      # FIXME: when god support happens
+      @config[:god] = false
+
+      # unless use_god?
+      #   unless daemonize?
+      #     show_crontab
+      #   end
+      # end
       get_host
       get_acl
       get_groups
@@ -309,14 +324,12 @@ END_ERROR
       write_down
 
       success!
-
+      exit
 
       #puts "\nAttempting to contact the server..."
       #begin
-      #  Jah::Server.new(server, key, history, log) { |scout| scout.test }
-      #end
+      #  Jah::Server.new
       # rescue SystemExit
-
       #  end
     end
   end

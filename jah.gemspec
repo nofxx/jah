@@ -5,36 +5,56 @@
 
 Gem::Specification.new do |s|
   s.name = %q{jah}
-  s.version = "0.0.1"
+  s.version = "0.0.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Marcos Piccinini"]
-  s.date = %q{2009-09-21}
+  s.date = %q{2009-09-29}
   s.default_executable = %q{jah}
   s.description = %q{talk to your machines}
   s.email = %q{x@nofxx.com}
   s.executables = ["jah"]
   s.extra_rdoc_files = [
     "LICENSE",
-     "README.rdoc"
+     "README.md"
   ]
   s.files = [
     ".document",
      ".gitignore",
      "LICENSE",
-     "README.rdoc",
+     "README.md",
      "Rakefile",
      "VERSION",
      "bin/jah",
-     "jah.yaml",
+     "jah.gemspec",
      "lib/jah.rb",
+     "lib/jah.yaml.template",
      "lib/jah/agent.rb",
      "lib/jah/agents/dump.rb",
      "lib/jah/agents/post.rb",
      "lib/jah/agents/xmpp.rb",
      "lib/jah/cli.rb",
      "lib/jah/collector.rb",
+     "lib/jah/collectors/cpu.rb",
+     "lib/jah/collectors/disk.rb",
+     "lib/jah/collectors/mem.rb",
+     "lib/jah/collectors/net.rb",
+     "lib/jah/collectors/prok.rb",
+     "lib/jah/collectors/services.rb",
+     "lib/jah/collectors/who.rb",
+     "lib/jah/command.rb",
+     "lib/jah/commands/admin.rb",
+     "lib/jah/commands/extra.rb",
+     "lib/jah/commands/pub.rb",
+     "lib/jah/commands/status.rb",
+     "lib/jah/god.rb",
      "lib/jah/install.rb",
+     "lib/locales/en_us.yml",
+     "lib/locales/pt_br.yml",
+     "lib/locales/pt_br_gostosa.yml",
+     "lib/locales/pt_br_mano.yml",
+     "lib/locales/pt_br_mineiro.yml",
+     "spec/console",
      "spec/jah_spec.rb",
      "spec/spec_helper.rb"
   ]

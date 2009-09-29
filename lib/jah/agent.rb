@@ -57,6 +57,10 @@ module Jah
       start
     end
 
+    def self.install
+      Install.new
+    end
+
     def daemonize
       begin
         File.open(pid_file, File::CREAT|File::EXCL|File::WRONLY) do |pid|

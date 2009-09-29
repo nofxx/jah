@@ -5,16 +5,18 @@
 #TODO: def init
 require 'logger'
 
-
-HOME = ENV['HOME'] + "/.jah/"
-unless File.exists? HOME
-  FileUtils.mkdir_p HOME
-end
-
 module Jah
 
-  Opt = {}
+  HOME = ENV['HOME'] + "/.jah/"
+  unless File.exists? HOME
+    FileUtils.mkdir_p HOME
+  end
+
   Log = Logger.new(HOME + "jah.log")
+  def Log.write(d); self.warn(d); end
+  $stderr = Log
+
+  Opt = {}
 
   def self.hostname
     `hostname`.chomp.gsub(/\W/, "") rescue "jah#{rand(42000)}"
@@ -93,24 +95,17 @@ BANNER
     def self.dispatch(argv)
       Jah::Opt.merge! autoload_config(parse_options(argv))
       if comm = argv.shift
-        Jah::Agent.send(comm)
+        Jah::Agent.send(comm) rescue puts "Command not found: #{comm}"
       else
-        if Jah.mode
-          Jah::Agent.start #(options) #[name_or_key] + argv)
-        else
-          puts "No config file found.. running install.."
-          Install.new # (options, argv)
-        end
+        Jah.mode ? Jah::Agent.start : Install.new
       end
-      rescue => e
-        puts "Command not found: #{comm}"
     end
 
     # Load config [., ~/.jah, /etc]
     def self.autoload_config(options)
       conf = "jah.yaml"
       file = options[:config] || [nil, HOME, "/etc/"].select { |c| File.exists? "#{c}#{conf}" }[0]
-      options = YAML.load(File.read(file + conf)).merge!(options)  if file
+      options = YAML.load(File.read(file + conf)).merge!(options) if file
 
       # Map acl and group arrays
       [:acl, :groups].each do |g|
@@ -124,18 +119,6 @@ BANNER
       options
     end
 
-    def initialize # (options, args)
-      # @verbose = options[:verbose] || false
-      # @level = options[:level] || "info"
-
-      # @args = args
-    end
-    attr_reader :server
-
-
-
   end
-
-
 
 end

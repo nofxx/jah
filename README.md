@@ -1,64 +1,89 @@
-= Jah ooo
+# Jah
 
-Talk to your machines.  Like a god.
+![Jah](http://fireho.com/system/jahlogo.png)
 
+Talk to your machines. Like a god.
 
-== Install
+## Install
 
-If you don't have a Jah config file, just run it for the first time.
-Or use `jah install` to force the wizard again.
+Just run it for the first time to create a config file.
+Use `jah install` to force the wizard again.
 
-=== Requirements
-
-Jah only requires these gems if using XMPP mode:
+Gems needed for XMPP mode:
 
 * EventMachine (gem install eventmachine)
 * Blather      (gem install blather)
 
 
-== Modes
+Jah will try to find a `jah.yaml` file on ~/.jah or /etc.
 
-=== XMPP
+
+## Modes
+
+### XMPP
 
 Chat with your server with your favorite XMPP client (pidgin, adium..)
 Receive reports and failures realtime!
 Send commands and
 
 
-=== POST
+### POST
 
 The old school way. Set up a Jah Web Server, and give Jah it`s address.
 Jah will periodically post info. You can send commands through SSH.
 
 
-=== DUMP
+### DUMP
 
 AkA: Security freak. Jah just writes to tmp/ or whatever a dump file,
-Jah Web securely connects and SCP the data to parse.
+Jah Web securely connects (scp) and downloads the data to parse.
 
 
-
-=== Use God?
-
+## Use God?
 
 
-=== Daemonize?
+## XMPP Bot
 
-
-
-
-
-== XMPP Bot
 
 Execute sh commands:
 
-   pwd
-   $> /home/jah
+    pwd
+    $> /home/jah
+
 
 Executing ruby statements:
 
     ! 2 + 2
     => 4
+
+    ! def foo; "hi"; end
+    ! foo
+    => "hi"
+
+
+Execute Jah commands:
+
+    cpu?
+    msweet: 0.14, 0.25, 0.14
+
+    mem?
+    msweet: 53%
+
+    net?
+    7 connections
+    [ips...]
+
+    ok?
+    [Personalized cool phrase...]
+
+
+Group session:
+
+    me: ok?
+    msweet: I'm fine, thanks..
+    ssaint: Kinda busy right now..
+    naomi: I need you! Now!
+
 
 Execute God statements:
 
@@ -72,7 +97,11 @@ trivial to work with your services:
     unmonitor postgresql
 
 
-== Note on Patches/Pull Requests
+More to come...
+
+
+
+## Note on Patches/Pull Requests
 
 * Fork the project.
 * Make your feature addition or bug fix.
@@ -83,6 +112,6 @@ trivial to work with your services:
    bump version in a commit by itself I can ignore when I pull)
 * Send me a pull request. Bonus points for topic branches.
 
-== Copyright
+## Copyright
 
 Copyright (c) 2009 Marcos Piccinini. See LICENSE for details.
