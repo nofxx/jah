@@ -110,7 +110,7 @@ BANNER
     def self.autoload_config(options)
       conf = "jah.yaml"
       file = options[:config] || [nil, HOME, "/etc/"].select { |c| File.exists? "#{c}#{conf}" }[0]
-      options.merge!(YAML.load(File.read(file + conf)))  if file
+      options = YAML.load(File.read(file + conf)).merge!(options)  if file
 
       # Map acl and group arrays
       [:acl, :groups].each do |g|

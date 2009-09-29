@@ -7,6 +7,7 @@ require 'stringio'
 
 module Jah
   class Agent
+    PID_FILE = File.join("/tmp", "jah.pid")
     autoload :XmppAgent, "jah/agents/xmpp"
     autoload :PostAgent, "jah/agents/xmpp"
     autoload :DumpAgent, "jah/agents/xmpp"
@@ -23,8 +24,8 @@ module Jah
       run_agent_run
     end
 
-    def self.pid_file
-      File.join("/tmp", "jah.pid")
+    def pid_file
+      @pidfile ||= PID_FILE
     end
 
     def run_agent_run
@@ -41,7 +42,19 @@ module Jah
     end
 
     def self.stop
+      if File.exists?(PID_FILE)
+        pid = File.read(PID_FILE)
+        puts "Stopping #{pid}"
+        `kill #{pid}`
+      else
+        puts "Jah not running..."
+        exit
+      end
+    end
 
+    def self.restart
+      stop
+      start
     end
 
     def daemonize
