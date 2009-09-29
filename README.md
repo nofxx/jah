@@ -1,6 +1,4 @@
-# Jah
-
-![Jah](http://fireho.com/system/jahlogo.png)
+# ![Jah](http://fireho.com/system/jahlogo.png)
 
 Talk to your machines. Like a god.
 
