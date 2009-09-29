@@ -1,0 +1,26 @@
+# Jah Config file for 'HOST'
+---
+:mode: MODE
+:i18n: I18N
+
+# Auth
+:jid: JID
+:host: HOST
+:key: KEY
+
+# Access
+:acl: ACL
+:groups: GROUPS
+
+# Opts
+:eval: EVAL
+:god: GOD
+:debug: DEBUG
+:report: REPORT
+:daemon: true
+
+# Alerts
+alerts:
+  :max_cpu:
+  :max_mem:
+  :max_swp:

@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+#  Jah
+$LOAD_PATH.unshift(File.dirname(__FILE__))
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
+['irb', 'jah', 'readline', 'rubygems'].each {|e| require e }
+
+#history_file = File.join(ENV["HOME"], '.myrb_history')
+#IO.readlines(history_file).each {|e| Readline::HISTORY << e.chomp } if File.exists?(history_file)
+while (input = Readline.readline('>> ', true)) != 'exit'
+  begin puts "=> #{eval(input).inspect}"; rescue Exception; puts "Error: #{$!}" end
+end
+#File.open(history_file, 'w') {|f| f.write Readline::HISTORY.to_a.join("\n") }

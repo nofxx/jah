@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+$VERBOSE = true # -w
+$KCODE = "u" # -Ku
+
+$LOAD_PATH << File.join(File.dirname(__FILE__), *%w[.. lib])
+require "jah"
+
+Jah::Cli.dispatch(ARGV)

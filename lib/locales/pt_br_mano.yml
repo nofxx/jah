@@ -1,0 +1,10 @@
+pt_br_mano:
+  fail: Casa caiu mano..
+  exit_code: Ih..ó o cara, moh {{ex}}
+  access_fail: É pra ninguém subir nessa porra!
+  ok: Firmeza mano
+  no_sudo: Só diretoria mano..
+  states:
+    green: Limpeza mano..
+    yellow: Embaçado mano..
+    red: Mano, FODEU!

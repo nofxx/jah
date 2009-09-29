@@ -1,0 +1,7 @@
+*.sw?
+*.log
+.DS_Store
+coverage
+rdoc
+pkg
+jah.yaml

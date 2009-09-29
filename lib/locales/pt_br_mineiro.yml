@@ -1,0 +1,10 @@
+pt_br_mineiro:
+  fail: Faiô..
+  exit_code: Num prestô..
+  access_fail: Tá achano que é o dono da casa pra levá a chave?
+  ok: É nóis!
+  no_sudo: Sem cachaça procê!
+  states:
+    green: Uai, to bão sô! E ocê?
+    yellow: Tá mai pra lá do que pra cá..
+    red: Vége que a vaca tá no brejo!
