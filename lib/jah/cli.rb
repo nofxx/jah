@@ -14,7 +14,7 @@ module Jah
 
   Log = Logger.new(HOME + "jah.log")
   def Log.write(d); self.warn(d); end
-  $stderr = Log
+  # $stderr = Log
 
   Opt = {}
 
@@ -95,7 +95,7 @@ BANNER
     def self.dispatch(argv)
       Jah::Opt.merge! autoload_config(parse_options(argv))
       if comm = argv.shift
-        Jah::Agent.send(comm) rescue puts "Command not found: #{comm} #{@usage}"
+        Jah::Agent.send(comm) #rescue puts "Command not found: #{comm} #{@usage}"
       else
         Jah.mode ? Jah::Agent.start : Install.new
       end

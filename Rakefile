@@ -5,8 +5,8 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "jah"
-    gem.summary = "be omnipresent..."
-    gem.description = "talk to your machines"
+    gem.summary = "Be omnipresent..."
+    gem.description = "Talk to your machines. Like a God."
     gem.email = "x@nofxx.com"
     gem.homepage = "http://github.com/nofxx/jah"
     gem.authors = ["Marcos Piccinini"]

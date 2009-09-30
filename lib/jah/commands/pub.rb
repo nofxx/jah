@@ -1,11 +1,13 @@
 require "blather/client/dsl"
 
 module Jah
+  PUBSUB = {:pubs => [], :subs => []}
 
   class Pub
     include Command
 
-    register  :create, 'create\spubsub.*'
+   # register  :create, 'create\spubsub.*'
+  #  register  :publish, 'pub:'
 
 
     def self.create(_, node)
@@ -17,10 +19,17 @@ module Jah
     end
 
     def self.all
-
-
+      "Owner => #{PUBSUB[:pubs].join(", ")}"
     end
 
+
+    def self.publish(name, body)
+      Blather::Stanza::PubSub::Publish.new("pubsub.fireho.com", name, :set, body)
+    end
+
+
+    def self.destroy
+    end
 
 
 

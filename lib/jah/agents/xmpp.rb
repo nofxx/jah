@@ -17,10 +17,13 @@ module Jah
     end
 
     def process_message(to, msg, type = :chat)
+      args = msg.split(" ")
       if comm = Jah::Command.find(msg)
         puts "Commmand => #{comm} | #{msg}"
-        args = msg.split(" ")
         body = comm[2].send(comm[0], *args[1..-1])
+      elsif pub = PUBSUB[:pubs].find { |p| msg =~ /^#{p}/ }
+        client.write Pub.send("publish", pub, *args[1..-1])
+        body = "Publishing...."
       else
         keywords = %w{ start stop restart monitor unmonitor }
         kind = :god if msg =~ /#{keywords.join("|")}/
@@ -101,6 +104,9 @@ module Jah
           presence.to = "#{c}/#{Jah.hostname}"
           client.write presence
         end
+
+        client.write Blather::Stanza::PubSub::Affiliations.new(:get, "pubsub.fireho.com")
+        client.write Blather::Stanza::PubSub::Subscriptions.new(:get, "pubsub.fireho.com")
       end
 
       client.register_handler :subscription, :request? do |s|
@@ -121,9 +127,24 @@ module Jah
       #client.register_handler :message, :error?, :body do |m|
       #client.register_handler :message, :headline?, :body do |m|
       #client.register_handler :message, :normal?, :body do |m|
+      client.register_handler :pubsub_affiliations, :affiliations do |m|
+        puts "[PUB] =>  #{m.inspect}"
+        m.each do |af|
+          PUBSUB[:pubs] << af[1][0].gsub(/\//, '')
+        end
+      end
+
+      client.register_handler :pubsub_subscriptions, :subscriptions, :list do |m|
+        puts "[SUB] =>  #{m.inspect}"
+        m.each do |af|
+          PUBSUB[:subs] << af[1][0][:node].gsub(/\//, '')
+        end
+      end
 
       client.register_handler :pubsub_event, :items do |m|
+        #PUBSUB[:pubs] =
         puts "[PUBSUB] => #{m.inspect}"
+        puts m.items
         client.write m.body
       end
 
