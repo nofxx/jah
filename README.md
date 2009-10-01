@@ -6,14 +6,21 @@ Talk to your machines. Like a god.
 
 Just run it for the first time to create a config file.
 Use `jah install` to force the wizard again.
-
-Gems needed for XMPP mode:
-
-* EventMachine (gem install eventmachine)
-* Blather      (gem install blather)
-
-
 Jah will try to find a `jah.yaml` file on ~/.jah or /etc.
+
+
+## Support
+
+* ArchLinux (tested)
+* Mac OS X (tested)
+* CentOS (tested)
+* Debian (tested)
+* BSD
+
+Gems required for XMPP mode:
+
+* Blather
+* EventMachine
 
 
 ## Modes
@@ -36,8 +43,6 @@ Jah will periodically post info. You can send commands through SSH.
 AkA: Security freak. Jah just writes to tmp/ or whatever a dump file,
 Jah Web securely connects (scp) and downloads the data to parse.
 
-
-## Use God?
 
 
 ## XMPP Bot
@@ -80,23 +85,66 @@ Group session:
     me: ok?
     msweet: I'm fine, thanks..
     ssaint: Kinda busy right now..
-    naomi: I need you! Now!
+    naomi: I need you! NOW!
 
 
-Execute God statements:
+### System commands
+
+
+## PubSub
+
+Create a pubsub:
+
+    pub create foo
+    jah: Done.
+
+Publish to it:
+
+    foo: pubbin and dubbin from jah!
+    jah: Published.
+
+My pubs:
+
+    pub mine
+    jah: Pubsubs
+    Owner: foo
+
+All pubs:
+
+    pub all
+    jah: All Pubsubs
+    => /foo
+    => /bar
+
+Subscribe to bar:
+
+    pub sub bar
+    jah: Done.
+
+
+Unsubscribe to bar:
+
+    pub unsub bar
+    jah:Done.
+
+
+Destroy a pub:
+
+    pub destroy foo
+    jah: Done.
+
+
+## Use God?
+
+### God commands
 
 Start, stop, restart, monitor and unmonitor words on the beginning
 of a phrase will make Jah add a "god" on the front of it, making it
 trivial to work with your services:
 
-
     start nginx
     restart nanites
     unmonitor postgresql
-
-
-More to come...
-
 
 
 ## Note on Patches/Pull Requests
@@ -109,6 +157,7 @@ More to come...
   (if you want to have your own version, that is fine but
    bump version in a commit by itself I can ignore when I pull)
 * Send me a pull request. Bonus points for topic branches.
+
 
 ## Copyright
 

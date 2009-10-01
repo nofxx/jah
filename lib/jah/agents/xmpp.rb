@@ -5,6 +5,9 @@ module Jah
  # include Blather::DSL
   class XmppAgent
     ROSTER = []
+    PUBSUB = {:pubs => [], :subs => []}
+    PEERS = []
+
     attr_reader :client
 
 
@@ -21,20 +24,28 @@ module Jah
       if comm = Jah::Command.find(msg)
         puts "Commmand => #{comm} | #{msg}"
         body = comm[2].send(comm[0], *args[1..-1])
-      elsif pub = PUBSUB[:pubs].find { |p| msg =~ /^#{p}/ }
-        client.write Pub.send("publish", pub, *args[1..-1])
+      elsif pub = PUBSUB[:pubs].find { |x| msg =~ /^#{x}:/ }
+        publish_pub(pub, *args[1..-1])
         body = "Publishing...."
       else
         keywords = %w{ start stop restart monitor unmonitor }
-        kind = :god if msg =~ /#{keywords.join("|")}/
-        kind ||= msg =~ /^\!/ ? :ruby : :sh
+        kind = case msg
+               when /#{keywords.join("|")}/ then :god
+               when /^\!/ then :ruby
+               when /^pub\s/ then :pub
+               else :sh
+               end
         body = case kind
-          when :ruby
-          puts "Executing ruby command => #{msg}"
-          "=> #{execute_ruby(msg)}"
           when :sh
           puts "Executing *sh command => #{msg}"
           "$> #{execute_sh(msg)}"
+          when :pub
+                 PEERS << to.stripped unless PEERS.find { |p| p == [to.stripped] }
+          puts "Executing pubsub command => #{msg}"
+          "P> #{execute_pub(msg)}"
+          when :ruby
+          puts "Executing ruby command => #{msg}"
+          "=> #{execute_ruby(msg)}"
           when :god
           puts "Executing god command => #{msg}"
           "G> #{execute_sh('god ' + msg)}"
@@ -74,6 +85,88 @@ module Jah
       res
     end
 
+    def execute_pub(code)
+      comm = code.split(" ")
+      case comm[1]
+      when "all" then all_pubs
+      when "mine" then my_pubs
+      when "list" then list_pub(comm[2])
+      when "fetch" then fetch_pubs || "Done."
+      when "create" then create_pub(comm[2])
+      when /^sub\w*/  then sub_pub(comm[2])
+      when /^unsub\w*/  then unsub_pub(comm[2])
+      when "destroy" then destroy_pub(comm[2])
+
+      end
+    end
+
+    def pub_node
+      @pub_node ||= "pubsub." + client.jid.domain
+    end
+
+    def create_pub(name)
+      client.write Blather::Stanza::PubSub::Create.new(:set,
+        pub_node, name) { |n| yield n if block_given? }
+      PUBSUB[:pubs] << name
+      "Done."
+    end
+
+    def publish_pub(name, *text)
+      client.write Blather::Stanza::PubSub::Publish.new(pub_node, name, :set, text.join)
+      text.join
+    end
+
+    def list_pub(name)
+      client.write Blather::Stanza::PubSub::Items.request(pub_node, name)
+    end
+
+    def destroy_pub(name)
+      client.write Blather::Stanza::PubSubOwner::Delete.new(:set, pub_node, '/' + name)
+      PUBSUB[:pubs] -= [name]
+      "Done."
+    end
+
+    def all_pubs
+      call = Blather::Stanza::DiscoItems.new
+      call.to = pub_node
+      client.write call
+    end
+
+    def my_pubs
+      out = "--- Pubsubs\n"
+      out << "Owner: #{PUBSUB[:pubs].join(', ')}\n" unless PUBSUB[:pubs].empty?
+      out << "Subscribed: #{PUBSUB[:subs].join(', ')}\n" unless PUBSUB[:subs].empty?
+      out == "" ? "No PubSubs." : out
+    end
+
+    def sub_pub(pub)
+      client.write Blather::Stanza::PubSub::Subscribe.new(:set, pub_node, '/' + pub, client.jid.stripped)
+      PUBSUB[:subs] << pub
+    end
+
+    def unsub_pub(pub)
+      client.write Blather::Stanza::PubSub::Unsubscribe.new(:set, pub_node, '/' + pub, client.jid.stripped)
+      PUBSUB[:subs] -= [pub]
+    end
+
+    def fetch_pubs
+      client.write Blather::Stanza::PubSub::Affiliations.new(:get, pub_node)
+      client.write Blather::Stanza::PubSub::Subscriptions.new(:get, pub_node)
+    end
+
+    def alert_peers(msg)
+      PEERS.each do |peer|
+        client.write Blather::Stanza::Message.new(peer, msg)
+      end
+    end
+
+    def process_items(items)
+      items.map do |item|
+        "\nItem: #{item.payload.strip}"
+      end
+    end
+
+
     #TODO: need to write raw....
     def beautify(txt)
       #txt.gsub!(/\*(.*)\*/, "<span style=\"font-weight: bold;\">\\1</span>")
@@ -105,8 +198,7 @@ module Jah
           client.write presence
         end
 
-        client.write Blather::Stanza::PubSub::Affiliations.new(:get, "pubsub.fireho.com")
-        client.write Blather::Stanza::PubSub::Subscriptions.new(:get, "pubsub.fireho.com")
+        fetch_pubs
       end
 
       client.register_handler :subscription, :request? do |s|
@@ -130,22 +222,47 @@ module Jah
       client.register_handler :pubsub_affiliations, :affiliations do |m|
         puts "[PUB] =>  #{m.inspect}"
         m.each do |af|
-          PUBSUB[:pubs] << af[1][0].gsub(/\//, '')
+          puts "[PUB ITEM] =>  #{af.inspect}"
+          PUBSUB[:pubs] = af[1].map { |p| p.gsub(/\//, '') }
         end
       end
 
-      client.register_handler :pubsub_subscriptions, :subscriptions, :list do |m|
+      client.register_handler :pubsub_subscriptions, :subscriptions do |m|
         puts "[SUB] =>  #{m.inspect}"
         m.each do |af|
-          PUBSUB[:subs] << af[1][0][:node].gsub(/\//, '')
+          puts "[SUB ITEM] =>  #{af.inspect}"
+          PUBSUB[:subs] = af[1].map { |p| p[:node].gsub(/\//, '') }
         end
       end
 
       client.register_handler :pubsub_event, :items do |m|
-        #PUBSUB[:pubs] =
-        puts "[PUBSUB] => #{m.inspect}"
-        puts m.items
-        client.write m.body
+        puts "[PUBSUB EV] => #{m.inspect}"
+        alert_peers "PubSub: #{m.node} #{process_items(m.items)}"
+      end
+
+      client.register_handler :pubsub_items, :items do |m|
+        puts "[PUBSUB ITEMS] => #{m.inspect}"
+        alert_peers "PubSub: #{m.node} #{process_items(m.items)}"
+      end
+
+      client.register_handler :disco_items do |r|
+        puts "[ITEM] => #{r}"
+        # Pub.delete_all
+        # PubItem.delete_all
+        for item in r.items
+          puts "[IT] => #{item.name} on #{item.node.class}"
+          # next if item.name =~ /^home$/
+          if item.node =~ /\//
+            puts "[PUBSUB] => #{item.name} on #{item.node}"
+            alert_peers item.name
+          else
+            if item.jid.to_s =~ /conference\./
+              puts "[GROUP] => #{item.name} on #{item.node}"
+            else
+              puts "[USER] => #{item.jid} name #{item.name}"
+            end
+          end
+        end
       end
 
       client.register_handler :message, :groupchat? do |m|

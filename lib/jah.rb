@@ -18,7 +18,6 @@ require 'jah/command'
 require "jah/commands/admin"
 require "jah/commands/status"
 require "jah/commands/extra"
-require "jah/commands/pub"
 
 module Jah
   VERSION = "0.0.1"
