@@ -22,7 +22,7 @@ module Jah
       end
 
       def mem
-        Mem.get.percent.to_s + "%"
+        Mem.percent.to_s + "%"
       end
 
       def cpu
