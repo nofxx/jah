@@ -14,7 +14,7 @@ module Jah
     class << self
 
       def ok
-        I18n.t("states." + case Jah::Cpu.get.med
+        I18n.t("states." + case Jah::Cpu.med
           when 0..0.5 then :green
           when 0.51..0.7 then :yellow
           else :red
@@ -26,7 +26,7 @@ module Jah
       end
 
       def cpu
-        Cpu.get.load
+        Cpu.load
       end
 
       def net

@@ -8,5 +8,11 @@ module Jah
     end
 
 
+    def self.method_missing(*meth)
+      read
+      @res[meth[0].to_sym]
+    end
+
+
   end
 end
