@@ -1,8 +1,16 @@
 module Jah
 
-  class Mem < Collector
+  class Mem
+    include Command
+    register(:snap, 'mem\??$')
 
     class << self
+
+      def snap
+        read
+        "Free: #{@res[:free]} Used: #{@res[:used]} #{@res[:percent]}%"
+      end
+
       def read
         mem_info = {}
         `cat /proc/meminfo`.each do |line|

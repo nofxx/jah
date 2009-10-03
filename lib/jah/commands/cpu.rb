@@ -1,7 +1,14 @@
 module Jah
-  class Cpu < Collector
+  class Cpu
+    include Command
+    register(:load, 'cpu\??$')
 
     class << self
+
+      def load
+        read
+        "Med: #{@res[:med]}"
+      end
 
       def read
         @res = cpu_load

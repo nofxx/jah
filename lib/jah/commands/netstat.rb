@@ -1,6 +1,17 @@
 module Jah
-  class Netstat < Collector
+  class Netstat
+    include Command
+        register(:net, 'net\??$')
+
     class << self
+
+      def net
+        out = ""
+        Net.connections.each do |c|
+          out << "#{c[0]} => #{c[1]} connections\n"
+        end
+        out << "Total: #{Net.count}"
+      end
 
       def count
         `netstat -n | grep -i established | wc -l`.to_i

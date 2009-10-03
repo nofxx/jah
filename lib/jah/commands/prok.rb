@@ -1,8 +1,15 @@
 module Jah
 
-  class Prok < Collector
+  class Prok
+    include Command
     attr_reader :user, :pid, :comm, :cpu, :mem, :rss, :vsz, :stat, :tty, :time
     BANLIST = [/^ata/, /^init$/, /^scsi_/, /\/\d$/, /agetty/ ]
+    register(:read, 'proks?\s|top$')
+
+    def self.read(find = nil)
+      find ? Prok.find(find).to_s : Prok.all.map(&:to_s)
+
+    end
 
     def self.all
        `ps auxww`.to_a[1..-1].map do |l|

@@ -300,11 +300,12 @@ module Jah
         client.run
         if @report != 0
           puts "will report..."
-          EM.add_periodic_timer(@report) do
-            puts " I'm ok.. "
-            client.write Blather::Stanza::Message.new(
-                "nofxx@Jah.host.com", Jah::Collector.quick_results)
-          end
+          # TODO
+          # EM.add_periodic_timer(@report) do
+          #   puts " I'm ok.. "
+          #   client.write Blather::Stanza::Message.new(
+          #       "nofxx@Jah.host.com", Jah::Command.quick_results)
+          # end
         end
 
       end

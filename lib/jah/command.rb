@@ -13,9 +13,14 @@ module Jah
 
     module ClassMethods
 
-    def register(handler, regex)
-      REG << [handler, /^#{regex}/, self]
-    end
+      def method_missing(*meth)
+        read
+        @res[meth[0].to_sym]
+      end
+
+      def register(handler, regex)
+        REG << [handler, /^#{regex}/, self]
+      end
 
     end
 
