@@ -1,39 +1,33 @@
 module Jah
 
-  class Ps < Collector
-    COMM = "ps auxww"
+  class Prok < Collector
+    attr_reader :user, :pid, :comm, :cpu, :mem, :rss, :vsz, :stat, :tty, :time
+    BANLIST = [/^ata/, /^init$/, /^scsi_/, /\/\d$/, /agetty/ ]
 
     def self.all
-      `#{COMM}`.to_a[1..-1].map do |l|
-          Prok.new(l.split)
+       `ps auxww`.to_a[1..-1].map do |l|
+        new(l.split)
+      end
+    end
+
+    def self.find(comm_or_pid)
+      all.select do |p|
+        unless comm_or_pid.to_i.zero?
+          p.pid == comm_or_pid.to_i
+        else
+          p.comm =~ /#{comm_or_pid}/
         end
+      end
     end
 
-    def self.find(name)
-
-    end
-
-
-  end
-
-  class Prok
-    BANLIST = [/^ata/, /^init$/, /^scsi_/, /\/\d$/, /agetty/ ]
-    attr_reader :pid, :comm, :cpu, :mem, :rss, :vsz, :stat
-
-    def initialize(args) #      USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+    # USER  PID  %CPU  %MEM  VSZ  RSS  TTY  STAT  START  TIME  COMMAND
+    def initialize(args)
       return unless args[0]
-      @user  = args[0]
-      @pid   = args[1].chomp.to_i
-      @cpu   = args[2].chomp.to_f
-      @mem   = args[3].chomp.to_f
-      @vsz   = args[4].chomp.to_i
-      @rss   = args[5].chomp.to_i
-      @tty   = args[6]
-      @stat  = args[7]
-      @start = args[8]
-      @time  = args[9]
-      @comm  = args[10]
-      #@shr  = args[6]
+      @user, @pid, @cpu, @mem, @vsz, @rss, @tty, @stat, @start, @time, *@comm = args
+
+      @pid, @vsz, @rss = [@pid, @vsz, @rss].map(&:to_i)
+      @cpu, @mem = [@cpu, @mem].map(&:to_f)
+      @comm = @comm.join(" ")
     end
 
     def hup!
@@ -48,14 +42,18 @@ module Jah
       exec "kill -9 #{pid}"
     end
 
-    def self.genocide!(ary, f = nil)
-      for prok in ary
-        prok.kill
+    def self.genocide!(ary)
+      parsed = ary.gsub(/\W/, "").split(" ")
+      for prok in parsed
+        find(prok).each(&:kill!)
       end
     end
 
+    protected
+
     def exec(comm)
-      # SSHWorker.new(@host, @host.user, comm)
+      puts "[PROK] exec => #{comm}"
+      `#{comm}`
     end
 
     def force(f)

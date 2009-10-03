@@ -3,6 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe Jah::Cli do
 
   before do
+    File.stub!(:exists?).and_return(false)
     Jah::Cli.stub!(:parse_options).and_return({})
     Jah::Cli.stub!(:autload_config)
   end

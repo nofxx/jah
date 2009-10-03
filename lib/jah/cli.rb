@@ -109,7 +109,11 @@ BANNER
 
       # Map acl and group arrays
       [:acl, :groups].each do |g|
-        options[g] = options[g].split(",").map(&:strip)
+        if val = options[g]
+          options[g] = val.split(",").map(&:strip)
+        else
+          options[g] = []
+        end
       end
       options[:groups].map! { |g| "#{g}@conference.#{options[:host]}" }
 
