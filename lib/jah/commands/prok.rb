@@ -12,7 +12,7 @@ module Jah
     end
 
     def self.all
-       `ps auxww`.to_a[1..-1].map do |l|
+      `ps auxww`.to_a[1..-1].map do |l|
         new(l.split)
       end
     end

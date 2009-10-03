@@ -5,14 +5,14 @@ describe Cpu do
 
   describe "Read All" do
     before do
-      Cpu.should_receive(:`).with("uptime").and_return(" 20:10:57 up 12 days, 15:33,  8 users,  load average: 0.02, 0.08, 0.08\n")
+      Cpu.should_receive(:"`").with("uptime").and_return(" 20:10:57 up 12 days, 15:33,  8 users,  load average: 0.02, 0.08, 0.08\n")
     end
 
     it "should read one" do
       if RUBY_PLATFORM =~ /darwin/
-        Cpu.should_receive(:`).with("hwprefs cpu_count").and_return("2\n")
+        Cpu.should_receive(:"`").with("hwprefs cpu_count").and_return("2\n")
       else
-        Cpu.should_receive(:`).with("cat /proc/cpuinfo | grep 'model name' | wc -l").and_return("2\n")   
+        Cpu.should_receive(:"`").with("cat /proc/cpuinfo | grep 'model name' | wc -l").and_return("2\n")
       end
       Cpu.read[:one].should be_close(0.02, 0.01)
     end
