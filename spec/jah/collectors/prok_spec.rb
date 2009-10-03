@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe Prok do
 
-  before dod
+  before do
     Prok.stub!("`".to_sym).and_return(PSAUX) #```
   end
 
@@ -89,6 +89,10 @@ describe Prok do
     it "should send a KILL -9" do
       @prok.should_receive(:exec).with("kill -9 1")
       @prok.move_to_acre!
+    end
+
+    it "should have a to_s method" do
+      @prok.to_s.should eql("1 - root - ini (0.0, 0.0)")
     end
 
   end

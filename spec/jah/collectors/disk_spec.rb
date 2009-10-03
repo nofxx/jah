@@ -2,6 +2,10 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 
 describe Disk do
+require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
+
+
+describe Disk do
 
   before do
     Disk.should_receive(:"`").with("df").and_return(DISK)

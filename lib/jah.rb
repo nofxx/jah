@@ -9,11 +9,10 @@ require 'jah/agent'
 require 'jah/collector'
 require "jah/collectors/mem"
 require "jah/collectors/cpu"
-require "jah/collectors/net"
+require "jah/collectors/who"
 require "jah/collectors/disk"
 require "jah/collectors/prok"
-require "jah/collectors/net"
-require "jah/collectors/who"
+require "jah/collectors/netstat"
 require 'jah/command'
 require "jah/commands/admin"
 require "jah/commands/status"

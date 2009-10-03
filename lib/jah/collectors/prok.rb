@@ -42,6 +42,10 @@ module Jah
       exec "kill -9 #{pid}"
     end
 
+    def to_s
+      "#{pid} - #{user} - #{comm} (#{mem}, #{cpu})"
+    end
+
     def self.genocide!(ary)
       parsed = ary.gsub(/\W/, "").split(" ")
       for prok in parsed

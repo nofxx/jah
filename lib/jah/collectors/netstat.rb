@@ -1,9 +1,6 @@
 module Jah
-  class Net < Collector
-    #   :net  =>  "netstat -n | grep -i established | wc -l"
+  class Netstat < Collector
     class << self
-    #  attr_reader :count, :ips
-
 
       def count
         `netstat -n | grep -i established | wc -l`.to_i
@@ -16,11 +13,6 @@ module Jah
         end
       end
     end
-
-
-
-
-
 
 
   end
