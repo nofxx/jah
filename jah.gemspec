@@ -5,13 +5,13 @@
 
 Gem::Specification.new do |s|
   s.name = %q{jah}
-  s.version = "0.0.3"
+  s.version = "0.0.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Marcos Piccinini"]
-  s.date = %q{2009-09-29}
+  s.date = %q{2009-10-03}
   s.default_executable = %q{jah}
-  s.description = %q{talk to your machines}
+  s.description = %q{Talk to your machines. Like a God.}
   s.email = %q{x@nofxx.com}
   s.executables = ["jah"]
   s.extra_rdoc_files = [
@@ -35,18 +35,16 @@ Gem::Specification.new do |s|
      "lib/jah/agents/xmpp.rb",
      "lib/jah/cli.rb",
      "lib/jah/command.rb",
+     "lib/jah/commands/admin.rb",
      "lib/jah/commands/cpu.rb",
      "lib/jah/commands/disk.rb",
+     "lib/jah/commands/extra.rb",
      "lib/jah/commands/mem.rb",
-     "lib/jah/commands/net.rb",
+     "lib/jah/commands/netstat.rb",
      "lib/jah/commands/prok.rb",
      "lib/jah/commands/services.rb",
-     "lib/jah/commands/who.rb",
-     "lib/jah/command.rb",
-     "lib/jah/commands/admin.rb",
-     "lib/jah/commands/extra.rb",
-     "lib/jah/commands/pub.rb",
      "lib/jah/commands/status.rb",
+     "lib/jah/commands/who.rb",
      "lib/jah/god.rb",
      "lib/jah/install.rb",
      "lib/locales/en_us.yml",
@@ -55,6 +53,13 @@ Gem::Specification.new do |s|
      "lib/locales/pt_br_mano.yml",
      "lib/locales/pt_br_mineiro.yml",
      "spec/console",
+     "spec/jah/cli_spec.rb",
+     "spec/jah/commands/cpu_spec.rb",
+     "spec/jah/commands/disk_spec.rb",
+     "spec/jah/commands/mem_spec.rb",
+     "spec/jah/commands/netstat_spec.rb",
+     "spec/jah/commands/prok_spec.rb",
+     "spec/jah/commands/who_spec.rb",
      "spec/jah_spec.rb",
      "spec/spec_helper.rb"
   ]
@@ -62,9 +67,17 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.5}
-  s.summary = %q{be omnipresent...}
+  s.summary = %q{Be omnipresent...}
   s.test_files = [
-    "spec/jah_spec.rb",
+    "spec/jah/cli_spec.rb",
+     "spec/jah/commands/mem_spec.rb",
+     "spec/jah/commands/cpu_spec.rb",
+     "spec/jah/commands/who_spec.rb",
+     "spec/jah/commands/netstat_spec.rb",
+     "spec/jah/commands/disk_spec.rb",
+     "spec/jah/commands/prok_spec.rb",
+     "spec/jah/command_spec.rb",
+     "spec/jah_spec.rb",
      "spec/spec_helper.rb"
   ]
 
@@ -76,14 +89,17 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<blather>, [">= 0"])
       s.add_runtime_dependency(%q<i18n>, [">= 0"])
       s.add_development_dependency(%q<rspec>, [">= 0"])
+      s.add_development_dependency(%q<rr>, [">= 0"])
     else
       s.add_dependency(%q<blather>, [">= 0"])
       s.add_dependency(%q<i18n>, [">= 0"])
       s.add_dependency(%q<rspec>, [">= 0"])
+      s.add_dependency(%q<rr>, [">= 0"])
     end
   else
     s.add_dependency(%q<blather>, [">= 0"])
     s.add_dependency(%q<i18n>, [">= 0"])
     s.add_dependency(%q<rspec>, [">= 0"])
+    s.add_dependency(%q<rr>, [">= 0"])
   end
 end

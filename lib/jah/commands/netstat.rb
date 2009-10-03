@@ -1,13 +1,13 @@
 module Jah
   class Netstat
     include Command
-        register(:net, 'net\??$')
+    register(:net, 'net\??$')
 
     class << self
 
       def net
         out = ""
-        Net.connections.each do |c|
+        connections.each do |c|
           out << "#{c[0]} => #{c[1]} connections\n"
         end
         out << "Total: #{Net.count}"
@@ -24,7 +24,6 @@ module Jah
         end
       end
     end
-
 
   end
 end
