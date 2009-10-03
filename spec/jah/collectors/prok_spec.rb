@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe Prok do
 
-  before do
+  before dod
     Prok.stub!("`".to_sym).and_return(PSAUX) #```
   end
 
@@ -90,7 +90,6 @@ describe Prok do
       @prok.should_receive(:exec).with("kill -9 1")
       @prok.move_to_acre!
     end
-
 
   end
 

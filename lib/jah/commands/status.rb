@@ -8,7 +8,7 @@ module Jah
     register(:cpu, 'cpu\??$')
     register(:net, 'net\??$')
     register(:disk, 'disk\??$')
-    register(:proks, 'prok$|top$')
+    register(:proks, 'proks?$|top$')
 
 
     class << self
@@ -50,10 +50,7 @@ module Jah
       end
 
       def proks(find = nil)
-        Ps.all.map do |p|
-          next if find && p.comm !~ /#{find}/i
-          "#{p.comm} => #{p.mem}\n"
-        end
+        find ? Prok.find(find) : Prok.all
       end
 
     end

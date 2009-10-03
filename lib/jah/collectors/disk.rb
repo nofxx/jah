@@ -1,14 +1,27 @@
 module Jah
 
   class Disk < Collector
-    EXEC =  "df -h"
+    attr_reader :path, :percent, :total, :free, :used, :mount
 
     def self.all
-      @disks = `#{EXEC}`.to_a.reject { |dl| dl =~ /Size|none/ }.map do |l|
-        l = l.split(" ")
-        { :path => l[0], :total => l[1], :used => l[2], :avail => l[3], :percent => l[4]}
+      @disks = `df`.to_a.reject { |dl| dl =~ /Size|Use|none/ }.map do |l|
+        new l.split(" ")
       end
     end
 
+    def initialize(args)
+      @path, @total, @used, @free, @percent, @mount = args
+      @total, @used, @free = [@total, @used, @free].map(&:to_i)
+      @percent = @percent[0..-2].to_i
+    end
+
+    def self.mount
+    end
+
+    def self.umount
+    end
+
+
   end
+
 end
