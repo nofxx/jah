@@ -2,10 +2,11 @@ require 'rubygems'
 require 'optparse'
 require 'i18n'
 #autoload :Drb, 'drb'
-autoload :God, 'god'
 require 'jah/cli'
 require 'jah/install'
 require 'jah/agent'
+autoload :God, 'god'
+autoload :Prayer, "jah/prayer"
 require 'jah/command'
 require "jah/commands/mem"
 require "jah/commands/cpu"
@@ -18,6 +19,9 @@ require "jah/commands/status"
 require "jah/commands/extra"
 
 module Jah
-  VERSION = "0.0.1"
+  VERSION =  File.read(File.join(File.dirname(__FILE__), '..', 'VERSION'))
 
+  # find a better place for this
+  I18n.load_path += Dir[File.join(File.dirname(__FILE__), 'locales', "*.{rb,yml}")]
+  I18n.default_locale = "en_us"
 end

@@ -115,11 +115,10 @@ BANNER
           options[g] = []
         end
       end
+
+      I18n.locale = options[:i18n] if options[:i18n]
       options[:groups].map! { |g| "#{g}@conference.#{options[:host]}" }
 
-      # find a better place for this
-      I18n.load_path += Dir[File.join(File.dirname(__FILE__), '..', 'locales', "*.{rb,yml}")]
-      I18n.default_locale = options[:i18n] || "en_us"
       options
     end
 

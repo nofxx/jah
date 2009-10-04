@@ -40,7 +40,7 @@ module Jah
           puts "Executing *sh command => #{msg}"
           "$> #{execute_sh(msg)}"
           when :pub
-                 PEERS << to.stripped unless PEERS.find { |p| p == [to.stripped] }
+          PEERS << to.stripped unless PEERS.find { |p| p == [to.stripped] }
           puts "Executing pubsub command => #{msg}"
           "P> #{execute_pub(msg)}"
           when :ruby
