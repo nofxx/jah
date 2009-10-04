@@ -9,7 +9,11 @@ describe Cpu do
     end
 
     it "should read one" do
-      Cpu.should_receive(:`).with("cat /proc/cpuinfo | grep 'model name' | wc -l").and_return("2\n")
+      if RUBY_PLATFORM =~ /darwin/
+        Cpu.should_receive(:`).with("hwprefs cpu_count").and_return("2\n")
+      else
+        Cpu.should_receive(:`).with("cat /proc/cpuinfo | grep 'model name' | wc -l").and_return("2\n")   
+      end
       Cpu.read[:one].should be_close(0.02, 0.01)
     end
 
