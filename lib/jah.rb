@@ -2,6 +2,7 @@ require 'rubygems'
 require 'optparse'
 require 'i18n'
 #autoload :Drb, 'drb'
+require 'jah/opt'
 require 'jah/cli'
 require 'jah/install'
 require 'jah/agent'
@@ -17,6 +18,8 @@ require "jah/commands/netstat"
 require "jah/commands/admin"
 require "jah/commands/status"
 require "jah/commands/extra"
+require "jah/act_pkg"
+require "jah/act_pkg/base"
 
 module Jah
   VERSION =  File.read(File.join(File.dirname(__FILE__), '..', 'VERSION'))
