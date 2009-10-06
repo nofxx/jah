@@ -1,4 +1,3 @@
-require "eventmachine"#autoload :Client,
 require "blather/client/client"
 
 module Jah
@@ -293,8 +292,6 @@ module Jah
 
     def run
       puts "Starting Jah Client...#{client.jid.stripped}"
-      trap(:INT) { EM.stop }
-      trap(:TERM) { EM.stop }
 
       EM.run do
         client.run

@@ -20,7 +20,7 @@
 :daemon: true
 
 # Alerts
-alerts:
+:alerts:
   :max_cpu:
   :max_mem:
   :max_swp:

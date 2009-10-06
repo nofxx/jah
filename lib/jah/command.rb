@@ -1,14 +1,14 @@
 module Jah
-  REG = []
 
   module Command
+    COMM = []
 
     def self.included(base)
       base.extend ClassMethods
     end
 
     def self.find(msg)
-      REG.select { |r| r[1] =~ msg.squeeze(" ").strip }.first
+      COMM.select { |r| r[1] =~ msg.squeeze(" ").strip }.first
     end
 
     module ClassMethods
@@ -19,7 +19,7 @@ module Jah
       end
 
       def register(handler, regex)
-        REG << [handler, /^#{regex}/, self]
+        COMM << [handler, /^#{regex}/, self]
       end
 
     end

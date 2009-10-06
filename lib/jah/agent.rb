@@ -32,8 +32,7 @@ module Jah
       case Jah.mode # @mode
       when "xmpp" then  XmppAgent.new.run
       when "post" then  PostAgent.new.run
-      else
-        DumpAgent.new
+      else DumpAgent.new
       end
     end
 
