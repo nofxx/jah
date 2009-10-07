@@ -13,18 +13,18 @@ describe Jah::Cli do
   it "should start with install/config" do
     Opt.should_receive(:mode).and_return(nil)
     Jah::Install.should_receive(:new)
-    Jah::Cli.dispatch([])
+    Jah::Cli.work([])
   end
 
-  it "should dispatch install" do
+  it "should work install" do
     Jah::Install.should_receive(:new)
-    Jah::Cli.dispatch(["install"])
+    Jah::Cli.work(["install"])
   end
 
   it "should start if mode" do
     Opt.should_receive(:mode).and_return(:xmpp)
     Jah::Agent.should_receive(:start).and_return(true)
-    Jah::Cli.dispatch([])
+    Jah::Cli.work([])
   end
 
 

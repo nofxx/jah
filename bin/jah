@@ -3,7 +3,9 @@
 $VERBOSE = true # -w
 $KCODE = "u" # -Ku
 
-$LOAD_PATH << File.join(File.dirname(__FILE__), *%w[.. lib])
+# $LOAD_PATH << File.join(File.dirname(__FILE__), *%w[.. lib])
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require "jah"
+include Jah
 
-Jah::Cli.dispatch(ARGV)
+Jah::Cli.work(ARGV)

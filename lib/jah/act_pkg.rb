@@ -1,10 +1,8 @@
-autoload :Pacman, "jah/act_pkg/pacman"
-autoload :Apt, "jah/act_pkg/apt"
-autoload :Yum, "jah/act_pkg/yum"
 
 module Jah
 
   module ActPkg
+    autoload :Pacman, "jah/act_pkg/pacman"
 
     def self.detect
       if RUBY_PLATFORM =~ /darwin/

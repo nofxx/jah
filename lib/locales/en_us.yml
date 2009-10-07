@@ -1,2 +1,10 @@
 en_us:
   fail: Fail..
+  exit_code: Exit code
+  access_fail: Access Fail
+  ok: Ok!
+  no_sudo: No sudo!
+  states:
+    green: Everything ok...
+    yellow: Start to worry about me...
+    red: Overload! Overload!

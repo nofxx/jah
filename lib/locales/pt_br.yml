@@ -1,2 +1,10 @@
 pt_br:
   fail: Falhou..
+  exit_code: Comando não fechou bem...
+  access_fail: Você não tem permissão!
+  ok: Ok!
+  no_sudo: sudo desabilitado!
+  states:
+    green: Tudo nos padrões...
+    yellow: Começo a me preocupar...
+    red: Sistema bem carregado!

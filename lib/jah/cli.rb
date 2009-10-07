@@ -69,7 +69,7 @@ BANNER
     end
     private_class_method :parse_options
 
-    def self.dispatch(argv)
+    def self.work(argv)
       trap(:INT) { stop! }
       trap(:TERM) { stop! }
 

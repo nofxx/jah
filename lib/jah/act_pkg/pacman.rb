@@ -11,11 +11,10 @@ module Jah
     end
 
     def search(filter = nil)
-      res = run("#{BIN} -Ss #{filter}").to_a
       pkgs = []
-      (0..res.length-1).step(2) do |r|
-        name, version, size = res[r].split("/")[1].split(" ")
-        pkgs << Pkg.new(:new, name, version, res[r+1].strip)
+      run("#{BIN} -Ss #{filter}").to_a.each_slice(2) do |info, desc|
+        name, version, size = info.split("/")[1].split(" ")
+        pkgs << Pkg.new(:new, name, version, desc.strip)
       end
       pkgs
     end
@@ -38,7 +37,6 @@ module Jah
       :depends => ary[6], :required => ary[8], :size => ary[12], :arch => ary[14],
       :desc => ary[19]}
     end
-
 
     def upgrade(pkg)
       run "pacman -U #{pkg.name}"
