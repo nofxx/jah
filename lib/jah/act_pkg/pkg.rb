@@ -2,10 +2,18 @@ module Jah
 
   class Pkg
     include Comparable
-    attr_reader :name, :version, :status, :desc, :size, :url, :arch
+    attr_reader :name, :version, :status, :size
 
     def initialize(*args)
       @status, @name, @version, @desc = args
+    end
+
+    def desc
+      @desc ||= info[:desc]
+    end
+
+    def info
+      @info ||= ActPkg.info(self)
     end
 
     def installed?
@@ -13,7 +21,7 @@ module Jah
     end
 
     def install
-      ActPkg.install(name)
+      ActPkg.install(self)
     end
 
     def uninstall
@@ -33,5 +41,12 @@ module Jah
     end
 
 
+    def method_missing(*meth)
+      unless (val = info[meth[0]]).nil?
+        val
+      else
+        raise NoMethodError
+      end
+    end
   end
 end
