@@ -30,7 +30,12 @@ describe ActPkg do
 
   it "should return an instance of the correct adapter (arch)" do
     ActPkg.stub!(:detect).and_return(:pacman)
-    ActPkg.get_mine.should be_instance_of Pacman
+    ActPkg.manager.should be_instance_of Pacman
+  end
+
+  it "should delegate to the manager" do
+    ActPkg.manager.should_receive(:install).with("foo")
+    ActPkg.install("foo")
   end
 end
 

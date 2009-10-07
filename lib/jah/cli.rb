@@ -73,40 +73,22 @@ BANNER
       trap(:INT) { stop! }
       trap(:TERM) { stop! }
 
-      Opt.merge! autoload_config(parse_options(argv))
-      OptBackup.merge!(Opt)
+      Opt.autoload_config(parse_options(argv))
 
       if comm = argv.shift
         Jah::Agent.send(comm) #rescue puts "Command not found: #{comm} #{@usage}"
       else
-        Jah.mode ? Jah::Agent.start : Install.new
+        Opt.mode ? Jah::Agent.start : Install.new
       end
-    end
-
-    # Load config [., ~/.jah, /etc]
-    def self.autoload_config(options)
-      conf = "jah.yaml"
-      unless file = options[:config]
-        if file = [nil, HOME, "/etc/"].select { |c| File.exists? "#{c}#{conf}" }[0]
-          file << conf
-          options[:config] = file
-        end
-      end
-      options = YAML.load(File.read(file)).merge!(options) if file
-
-      I18n.locale = options[:i18n] if options[:i18n]
-      options[:groups] ||= []
-
-      options
     end
 
     def self.stop!
       puts "Closing Jah..."
-      if Opt != OptBackup
+      if Opt.hash != OptBackup
         puts "Writing config..."
-        File.open(Jah.config, "w+") do |f|
+        File.open(Opt.config, "w+") do |f|
           f.write "# Auto generated on #{Time.now}"
-          f.write Opt.to_yaml
+          f.write Opt.hash.to_yaml
         end
       end
       EM.stop

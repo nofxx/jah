@@ -16,7 +16,7 @@ module Jah
 
 Hello, thanks for trying Jah!
 
-Looks like #{Jah.hostname} doesn`t have a config file, shall we create one?
+Looks like #{Opt.hostname} doesn`t have a config file, shall we create one?
 
 Jah needs to know how it will run: xmpp, post or dump.
 
@@ -122,7 +122,7 @@ Use commas to separate multiple ones.
 
 END_INTRO
       print "ACL: "
-      @config[:acl] = gets.strip
+      @config[:acl] = gets.split(",").map(&:strip)
     end
 
     #
@@ -139,7 +139,7 @@ Use commas to separate multiple ones.
 
 END_INTRO
       print "Groups: "
-      @config[:groups] = gets.strip
+      @config[:groups] = gets.split(",").map(&:strip)
     end
 
 
@@ -239,9 +239,9 @@ Available options:
 * #{locs.join("\n* ")}
 
 END_I18N
-      print "Choose one (#{Jah.locale}): "
+      print "Choose one (#{Opt.locale}): "
       @config[:i18n] = gets.to_s.strip.downcase
-      @config[:i18n] = Jah.locale if @config[:i18n] == ""
+      @config[:i18n] = Opt.locale if @config[:i18n] == ""
     end
 
     #
@@ -279,11 +279,9 @@ END_ERROR
 
     def write_down
       outfile = "jah.yaml"
-      template = File.read(File.join(File.dirname(__FILE__), '..', 'jah.yaml.template'))
       @outfile =  File.writable?("/etc/") ? "/etc/" + outfile : HOME + outfile
       puts "Writing config to #{@outfile}.."
-      @config.keys.each { |k| template.gsub!(/#{k.to_s.upcase}/, @config[k].to_s) }
-      File.open(@outfile, "w") { |f| f.write template }
+      File.open(@outfile, "w") { |f| f.write @config.to_yaml }
     end
 
     def initialize
@@ -291,7 +289,7 @@ END_ERROR
       puts "No config file found.. running install.."
 
       @config = {}
-      @config[:host] = Jah.hostname
+      @config[:host] = Opt.hostname
       get_mode
       if @config[:mode] == :xmpp
         @config[:host] = ''

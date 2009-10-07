@@ -11,9 +11,9 @@ module Jah
 
 
     def initialize #(jid, key, server, port=5222, debug=false, report=0)
-      Blather.logger.level = Logger::DEBUG if Jah.debug
-      @report = Jah.report
-      @client = Blather::Client.setup Jah.jid, Jah.key, Jah.server, Jah.port
+      Blather.logger.level = Logger::DEBUG if Opt.debug
+      @report = Opt.report
+      @client = Blather::Client.setup Opt.jid, Opt.key, Opt.server, Opt.port
       setup
       self
     end
@@ -189,11 +189,11 @@ module Jah
       #  return if client && client.setup?
       client.register_handler(:ready) do
         puts "Connected!"
-        ROSTER << [client.roster.items.keys, Jah.groups].flatten.uniq
+        ROSTER << [client.roster.items.keys, Opt.groups].flatten.uniq
         ROSTER.flatten!
         ROSTER.select { |j| j =~ /\@conference\./ }.each do |c|
           presence = Blather::Stanza::Presence.new
-          presence.to = "#{c}/#{Jah.hostname}"
+          presence.to = "#{c}/#{Opt.hostname}"
           client.write presence
         end
 
@@ -265,12 +265,12 @@ module Jah
       end
 
       client.register_handler :message, :groupchat? do |m|
-        if m.body =~ Regexp.new(Jah.hostname)
+        if m.body =~ Regexp.new(Opt.hostname)
           body = m.body.split(":")[-1].strip
         else
           body = m.body
         end
-        if m.body =~ /^!|^>|^\\|#{Jah.hostname}/ && m.to_s !~ /x.*:delay/ #delay.nil?
+        if m.body =~ /^!|^>|^\\|#{Opt.hostname}/ && m.to_s !~ /x.*:delay/ #delay.nil?
           puts "[GROUP] => #{m.inspect}"
           for msg in process_message(m.from.stripped, body, :groupchat)
             client.write msg

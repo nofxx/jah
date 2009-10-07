@@ -20,6 +20,7 @@ require "jah/commands/status"
 require "jah/commands/extra"
 require "jah/act_pkg"
 require "jah/act_pkg/base"
+require "jah/act_pkg/pkg"
 
 module Jah
   VERSION =  File.read(File.join(File.dirname(__FILE__), '..', 'VERSION'))

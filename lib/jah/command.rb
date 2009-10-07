@@ -1,4 +1,4 @@
-cmodule Jah
+module Jah
 
   module Command
     COMM = []

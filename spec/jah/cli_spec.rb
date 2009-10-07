@@ -10,7 +10,7 @@ describe Jah::Cli do
   end
 
   it "should start with install/config" do
-    Jah.should_receive(:mode).and_return(nil)
+    Opt.should_receive(:mode).and_return(nil)
     Jah::Install.should_receive(:new)
     Jah::Cli.dispatch([])
   end
@@ -21,7 +21,7 @@ describe Jah::Cli do
   end
 
   it "should start if mode" do
-    Jah.should_receive(:mode).and_return(:xmpp)
+    Opt.should_receive(:mode).and_return(:xmpp)
     Jah::Agent.should_receive(:start).and_return(true)
     Jah::Cli.dispatch([])
   end
@@ -33,7 +33,7 @@ describe Jah::Cli do
   end
 
   it "should write config down if changed" do
-    Jah::Opt[:mode] = "xre"
+    Opt[:mode] = "xre"
     EM.should_receive(:stop)
     File.should_receive(:open).with(Opt[:config], "w+").and_yield(@mf = mock(File))
     @mf.should_receive(:write).exactly(2).times

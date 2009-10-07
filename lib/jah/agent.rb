@@ -13,7 +13,7 @@ module Jah
     autoload :DumpAgent, "jah/agents/xmpp"
 
     def initialize(options=nil)#, config)
-      if Jah.daemon?
+      if Opt.daemon?
         puts "Jah starting in background.."
         fork do
           daemonize
@@ -29,7 +29,7 @@ module Jah
     end
 
     def run_agent_run
-      case Jah.mode # @mode
+      case Opt.mode # @mode
       when "xmpp" then  XmppAgent.new.run
       when "post" then  PostAgent.new.run
       else DumpAgent.new

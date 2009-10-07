@@ -1,12 +1,10 @@
 autoload :Pacman, "jah/act_pkg/pacman"
+autoload :Apt, "jah/act_pkg/apt"
+autoload :Yum, "jah/act_pkg/yum"
 
 module Jah
 
   module ActPkg
-
-    def self.get_mine
-      const_get(detect.to_s.capitalize).new
-    end
 
     def self.detect
       case File.read("/etc/issue")
@@ -22,7 +20,13 @@ module Jah
       end
     end
 
+    def self.manager
+      @manager ||= const_get(detect.to_s.capitalize).new
+    end
 
+    def self.method_missing(*meth)
+      manager.send(*meth)
+    end
   end
 
 end

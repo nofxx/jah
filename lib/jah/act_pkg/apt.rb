@@ -4,5 +4,10 @@ module Jah
     BIN = "aptitude"
 
 
+  def self.all
+    "dpkg -l"
+  end
+
+
   end
 end
