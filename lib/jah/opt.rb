@@ -7,6 +7,8 @@ module Jah
     FileUtils.mkdir_p HOME
   end
 
+  I18n.default_locale = "en_us"
+
   Log = Logger.new(HOME + "jah.log")
   def Log.write(d); self.warn(d); end
   # $stderr = Log

@@ -1,12 +1,12 @@
 
 module Jah
-  class Apt
+  class Apt < ActPkg::Base
     BIN = "aptitude"
 
 
-  def self.all
-    "dpkg -l"
-  end
+    def self.all
+      "dpkg -l"
+    end
 
 
   end

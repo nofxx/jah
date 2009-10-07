@@ -7,16 +7,21 @@ module Jah
   module ActPkg
 
     def self.detect
-      case File.read("/etc/issue")
+      if RUBY_PLATFORM =~ /darwin/
+        :ports
+      else
+        case File.read("/etc/issue")
         when /Arch/i    then :pacman
         when /SUSE/i    then :zypp
         when /Mandriva/ then :urpm
+        when /BSD/      then :ports
         when /Fedora|CentOS/ then :yum
         when /Debian|Ubuntu/ then :apt
-        when /This|Gentoo/   then :portage
-        when /Welcome|Slack/ then :slackpkg
+        when /This|Gentoo/   then :emerge
+        when /Welcome|Slack/ then :slack
         else
-        raise "Is this LFS??"
+          raise "Is this LFS??"
+        end
       end
     end
 

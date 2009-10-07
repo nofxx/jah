@@ -1,6 +1,7 @@
 module Jah
 
-  class Yum
+
+  class Yum < ActPkg::Base
 
     def install(what)
       "yum install #{what}"

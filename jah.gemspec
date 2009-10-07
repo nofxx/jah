@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Marcos Piccinini"]
-  s.date = %q{2009-10-03}
+  s.date = %q{2009-10-07}
   s.default_executable = %q{jah}
   s.description = %q{Talk to your machines. Like a God.}
   s.email = %q{x@nofxx.com}
@@ -28,7 +28,13 @@ Gem::Specification.new do |s|
      "bin/jah",
      "jah.gemspec",
      "lib/jah.rb",
-     "lib/jah.yaml.template",
+     "lib/jah/act_pkg.rb",
+     "lib/jah/act_pkg/apt.rb",
+     "lib/jah/act_pkg/base.rb",
+     "lib/jah/act_pkg/pacman.rb",
+     "lib/jah/act_pkg/pkg.rb",
+     "lib/jah/act_pkg/port.rb",
+     "lib/jah/act_pkg/yum.rb",
      "lib/jah/agent.rb",
      "lib/jah/agents/dump.rb",
      "lib/jah/agents/post.rb",
@@ -46,6 +52,7 @@ Gem::Specification.new do |s|
      "lib/jah/commands/status.rb",
      "lib/jah/commands/who.rb",
      "lib/jah/install.rb",
+     "lib/jah/opt.rb",
      "lib/jah/prayer.rb",
      "lib/locales/en_us.yml",
      "lib/locales/pt_br.yml",
@@ -53,6 +60,11 @@ Gem::Specification.new do |s|
      "lib/locales/pt_br_mano.yml",
      "lib/locales/pt_br_mineiro.yml",
      "spec/console",
+     "spec/jah/act_pkg/apt_spec.rb",
+     "spec/jah/act_pkg/pacman_spec.rb",
+     "spec/jah/act_pkg/pkg_spec.rb",
+     "spec/jah/act_pkg/port_spec.rb",
+     "spec/jah/act_pkg_spec.rb",
      "spec/jah/agent_spec.rb",
      "spec/jah/agents/xmpp_spec.rb",
      "spec/jah/cli_spec.rb",
@@ -64,6 +76,7 @@ Gem::Specification.new do |s|
      "spec/jah/commands/prok_spec.rb",
      "spec/jah/commands/who_spec.rb",
      "spec/jah/install_spec.rb",
+     "spec/jah/opt_spec.rb",
      "spec/jah/prayer_spec.rb",
      "spec/jah_spec.rb",
      "spec/spec_helper.rb"
@@ -85,6 +98,12 @@ Gem::Specification.new do |s|
      "spec/jah/commands/prok_spec.rb",
      "spec/jah/agent_spec.rb",
      "spec/jah/command_spec.rb",
+     "spec/jah/act_pkg/apt_spec.rb",
+     "spec/jah/act_pkg/pkg_spec.rb",
+     "spec/jah/act_pkg/pacman_spec.rb",
+     "spec/jah/act_pkg/port_spec.rb",
+     "spec/jah/opt_spec.rb",
+     "spec/jah/act_pkg_spec.rb",
      "spec/jah/prayer_spec.rb",
      "spec/jah_spec.rb",
      "spec/spec_helper.rb"

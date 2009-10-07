@@ -8,12 +8,12 @@ describe Pacman do
   end
 
   it "should install stuff" do
-    @pac.should_receive(:"`").with("pacman -S foo")
+    @pac.should_receive(:"`").with("pacman -Sy --noconfirm foo")
     @pac.install mock(Pkg, :name => "foo")
   end
 
   it "should list pkgs" do
-    @pac.should_receive(:"`").with("pacman -Q").and_return(QL)
+    @pac.should_receive(:"`").with("pacman -Q ").and_return(QL)
     @pac.all.first.should be_instance_of(Pkg)
   end
 

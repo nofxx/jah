@@ -15,12 +15,12 @@ describe ActPkg do
 
   it "should detect slack" do
     File.stub!(:read).and_return(" Welcome to \s \r (\l)")
-    ActPkg.detect.should eql(:slackpkg)
+    ActPkg.detect.should eql(:slack)
   end
 
   it "should detect gentoo" do
     File.stub!(:read).and_return(" This is \n.\O (\s \m \r) \t")
-    ActPkg.detect.should eql(:portage) # sparta
+    ActPkg.detect.should eql(:emerge) # sparta
   end
 
   it "should detect centos" do

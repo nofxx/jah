@@ -24,8 +24,5 @@ require "jah/act_pkg/pkg"
 
 module Jah
   VERSION =  File.read(File.join(File.dirname(__FILE__), '..', 'VERSION'))
-
-  # find a better place for this
   I18n.load_path += Dir[File.join(File.dirname(__FILE__), 'locales', "*.{rb,yml}")]
-  I18n.default_locale = "en_us"
 end

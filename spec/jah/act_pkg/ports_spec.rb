@@ -1,7 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
-require "jah/act_pkg/port"
+require "jah/act_pkg/ports"
 
-describe Port do
+describe Ports do
 
 
 

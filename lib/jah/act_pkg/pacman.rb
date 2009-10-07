@@ -4,14 +4,18 @@ module Jah
   class Pacman < ActPkg::Base
     BIN = "pacman"
 
-    def all(search = nil)
-      run("#{BIN} -Q").to_a.map do |line|
+    def all(filter = nil)
+      run("#{BIN} -Q #{filter}").to_a.map do |line|
         Pkg.new(:installed, *line.split(" "))
       end
     end
 
+    def search(filter = nil)
+      run("#{BIN} -Ss #{filter}")
+    end
+
     def install(pkg)
-      run "#{BIN} -S #{pkg.name}"
+      run "#{BIN} -Sy --noconfirm #{pkg.name}"
     end
 
     def uninstall(pkg)
