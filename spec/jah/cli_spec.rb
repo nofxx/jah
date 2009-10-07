@@ -4,9 +4,10 @@ describe Jah::Cli do
 
   before do
     Cli.stub!(:puts)
+    Opt.stub!(:puts)
     File.stub!(:exists?).and_return(false)
     Jah::Cli.stub!(:parse_options).and_return({})
-    Jah::Cli.stub!(:autload_config)
+    Opt.stub!(:autoload_config)
   end
 
   it "should start with install/config" do
@@ -26,6 +27,7 @@ describe Jah::Cli do
     Jah::Cli.dispatch([])
   end
 
+
   it "should not write if it wasnt" do
     EM.should_receive(:stop)
     File.should_not_receive(:open)
@@ -33,12 +35,13 @@ describe Jah::Cli do
   end
 
   it "should write config down if changed" do
-    Opt[:mode] = "xre"
+    Opt.mode = "xre"
     EM.should_receive(:stop)
     File.should_receive(:open).with(Opt[:config], "w+").and_yield(@mf = mock(File))
     @mf.should_receive(:write).exactly(2).times
     Jah::Cli.stop!
   end
+
 
 
 end

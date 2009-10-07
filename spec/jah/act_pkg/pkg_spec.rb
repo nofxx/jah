@@ -45,7 +45,7 @@ describe Pkg do
 
     it "should not compare diff pkgs" do
       pkg2 = Pkg.new(:installed, "foo", "1.0.1")
-      lambda { pkg2 > @pkg }.should_raise
+      lambda { pkg2 > @pkg }.should raise_error
     end
   end
 end

@@ -23,13 +23,9 @@ Jah needs to know how it will run: xmpp, post or dump.
 END_MODE
       mode = nil
       print "Enter mode: "
-      while mode.nil?
-        mode = case gets.to_s.strip
-                when /xmpp/i then :xmpp
-                when /post/i then :post
-                when /dumpp/i then :dump
-                else print "Valid: xmpp, post or dump: "; nil
-                end
+      while mode !~ /xmpp|post|dump/i
+        print "Valid: xmpp, post or dump: "; nil
+        mode = gets.strip
       end
       @config[:mode] = mode
     end
@@ -291,12 +287,12 @@ END_ERROR
       @config = {}
       @config[:host] = Opt.hostname
       get_mode
-      if @config[:mode] == :xmpp
+      if @config[:mode] == 'xmpp'
         @config[:host] = ''
         get_jid
         get_pass
       end
-      if @config[:mode] == :post
+      if @config[:mode] == 'post'
         @config[:jid] = ''
         get_key
       end

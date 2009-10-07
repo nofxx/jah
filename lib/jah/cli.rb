@@ -84,13 +84,7 @@ BANNER
 
     def self.stop!
       puts "Closing Jah..."
-      if Opt.hash != OptBackup
-        puts "Writing config..."
-        File.open(Opt.config, "w+") do |f|
-          f.write "# Auto generated on #{Time.now}"
-          f.write Opt.hash.to_yaml
-        end
-      end
+      Opt.closing_time!
       EM.stop
     end
 

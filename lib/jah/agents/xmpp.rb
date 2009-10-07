@@ -13,7 +13,7 @@ module Jah
     def initialize #(jid, key, server, port=5222, debug=false, report=0)
       Blather.logger.level = Logger::DEBUG if Opt.debug
       @report = Opt.report
-      @client = Blather::Client.setup Opt.jid, Opt.key, Opt.server, Opt.port
+      @client = Blather::Client.setup Opt.jid, Opt.key, Opt.host, Opt.port
       setup
       self
     end
