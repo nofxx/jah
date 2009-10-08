@@ -6,6 +6,7 @@ require 'jah/opt'
 require 'jah/cli'
 require 'jah/install'
 require 'jah/agent'
+require 'jah/history'
 autoload :God, 'god'
 autoload :Prayer, "jah/prayer"
 require 'jah/command'

@@ -9,13 +9,13 @@ describe Pacman do
 
   describe "Searching" do
     before do
-      @pac.stub!(:"`").and_return(SS)
+      @pac.should_receive(:"`").with("pacman -Ss ruby").and_return(SS)
+      @pac.should_receive(:"`").with("pacman -Q").and_return(QL)
       @pkgs = @pac.search("ruby")
     end
 
     it "should find pkgs" do
-      @pac.should_receive(:"`").with("pacman -Ss ruby").and_return(SS)
-      first = @pac.search("ruby")[0]
+      first = @pkgs[0]
       first.name.should eql("ruby")
       first.desc.should eql("An object-oriented language for quick and easy programming")
     end
@@ -23,6 +23,10 @@ describe Pacman do
     it "should work nicely" do
       @pkgs[1].name.should eql("ruby-docs")
       @pkgs[1].desc.should eql("Documentation files for ruby")
+    end
+
+    it "should have ruby" do
+      @pkgs[0].should be_installed
     end
 
     it "should not be installed" do
@@ -43,7 +47,7 @@ describe Pacman do
   end
 
   it "should list pkgs" do
-    @pac.should_receive(:"`").with("pacman -Q ").and_return(QL)
+    @pac.should_receive(:"`").with("pacman -Q").and_return(QL)
     @pac.all.first.should be_instance_of(Pkg)
   end
 
@@ -87,9 +91,9 @@ describe Pacman do
   end
 
 SS = <<SS
-extra/ruby 1.9.1_p243-2 [4.67 MB]
+extra/ruby 1.8.7_p174-1 [4.67 MB]
     An object-oriented language for quick and easy programming
-extra/ruby-docs 1.9.1_p243-2 [0.87 MB]
+extra/ruby-docs 1.8.7_p174-1 [0.87 MB]
     Documentation files for ruby
 SS
 

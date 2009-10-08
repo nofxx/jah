@@ -2,33 +2,32 @@
 module Jah
 
   class Pacman < ActPkg::Base
-    BIN = "pacman"
 
+    # -Q installed packages
     def all(filter = nil)
-      run("#{BIN} -Q #{filter}").to_a.map do |line|
+      res = run("pacman -Q").to_a.map do |line|
         Pkg.new(:installed, *line.split(" "))
       end
+      res.select { |p| p.name =~ /#{filter}/ } if filter
+      res
     end
 
+    # -Ss /regex/ search all pkgs
     def search(filter = nil)
       pkgs = []
-      run("#{BIN} -Ss #{filter}").to_a.each_slice(2) do |info, desc|
+      installed = all(filter) # until figure out a memoize for all this
+      run("pacman -Ss #{filter}").to_a.each_slice(2) do |info, desc|
         name, version, size = info.split("/")[1].split(" ")
-        pkgs << Pkg.new(:new, name, version, desc.strip)
+        state = installed.find { |i| i.name == name }
+        pkgs << Pkg.new(state ? :installed : :new, name, version, desc.strip)
       end
       pkgs
     end
 
-    def install(pkg)
-      run "#{BIN} -Sy --noconfirm #{pkg.name}"
-    end
-
-    def uninstall(pkg)
-      run "#{BIN} -R --noconfirm #{pkg.name}"
-    end
-
+    # -Qi info about a pkg (only installed ones)
     def info(pkg)
-      ary = run("#{BIN} -Qi #{pkg.name}").to_a
+      ary = run("pacman -Qi #{pkg.name}").to_a
+      return nil if ary[0] =~ /error/
       ary.map! do |i|
         val = i.split("\s:\s")[1]
         val.strip if val
@@ -38,8 +37,17 @@ module Jah
       :desc => ary[19]}
     end
 
+    def install(pkgs)
+      pkgs = [pkgs] unless pkgs.class == Array
+      run "pacman -Sy --noconfirm #{pkgs.map(&:name).join(' ')}"
+    end
+
+    def uninstall(pkg)
+      run "pacman -R --noconfirm #{pkg.name}"
+    end
+
     def upgrade(pkg)
-      run "pacman -U #{pkg.name}"
+      run "pacman -U --noconfirm #{pkg.name}"
     end
 
     def update

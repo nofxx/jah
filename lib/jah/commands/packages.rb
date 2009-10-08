@@ -13,7 +13,11 @@ module Jah
       end
 
       def pkg(*meths)
-        ActPkg.send *meths
+        case res = ActPkg.send(*meths)
+        when Array
+          res.map { |i| ">#{i.name}  #{i.version}\n" }
+        when String then res
+        end
       end
     end
 
