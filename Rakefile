@@ -10,7 +10,7 @@ begin
     gem.email = "x@nofxx.com"
     gem.homepage = "http://github.com/nofxx/jah"
     gem.authors = ["Marcos Piccinini"]
-    gem.add_dependency "blather"
+    gem.add_dependency "blather", '>=0.4.7'
     gem.add_dependency "i18n"
     gem.add_development_dependency "rspec"
     # gem.add_development_dependency "rr"

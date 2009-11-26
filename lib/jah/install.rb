@@ -24,7 +24,7 @@ END_MODE
       mode = nil
       print "Enter mode: "
       while mode !~ /xmpp|post|dump/i
-        print "Valid: xmpp, post or dump: "; nil
+        print "Valid: xmpp, post or dump: "
         mode = gets.strip
       end
       @config[:mode] = mode

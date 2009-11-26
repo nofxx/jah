@@ -1,4 +1,10 @@
-
+#
+# ActPkg - Say 'install' and it works =D
+#
+# Nice tables:
+# http://distrowatch.com/dwres.php?resource=package-management
+# http://www.guiadohardware.net/dicas/referencia-pacotes-linux.html
+#
 module Jah
 
   module ActPkg

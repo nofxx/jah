@@ -1,6 +1,10 @@
 require 'rubygems'
 require 'optparse'
-require 'i18n'
+begin
+  require 'i18n'
+rescue LoadError
+  puts "Gem i18n not found. Try `gem install i18n`"
+end
 #autoload :Drb, 'drb'
 require 'jah/opt'
 require 'jah/cli'

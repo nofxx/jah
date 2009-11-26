@@ -17,7 +17,7 @@ module Jah
 
       # delegate?
       def method_missing(*meth)
-        @cache.send *meth
+        @cache.send(*meth)
       end
 
     end
