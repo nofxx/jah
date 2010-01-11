@@ -3,7 +3,8 @@ require 'optparse'
 begin
   require 'i18n'
 rescue LoadError
-  puts "Gem i18n not found. Try `gem install i18n`"
+  puts "Gem 'i18n' not found, try `gem install i18n`"
+  exit
 end
 #autoload :Drb, 'drb'
 require 'jah/opt'
@@ -14,16 +15,9 @@ require 'jah/history'
 autoload :God, 'god'
 autoload :Prayer, "jah/prayer"
 require 'jah/command'
-require "jah/commands/mem"
-require "jah/commands/cpu"
-require "jah/commands/who"
-require "jah/commands/disk"
-require "jah/commands/prok"
-require "jah/commands/netstat"
-require "jah/commands/admin"
-require "jah/commands/status"
-require "jah/commands/extra"
-require "jah/commands/packages"
+%w{mem cpu who disk prok netstat admin status extra packages}.each do |inc|
+  require "jah/commands/#{inc}"
+end
 require "jah/act_pkg"
 require "jah/act_pkg/base"
 require "jah/act_pkg/pkg"

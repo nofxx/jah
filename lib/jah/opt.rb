@@ -76,7 +76,7 @@ module Jah
         elsif !(val = @hash[key]).nil?
           val
         else
-          raise "No method #{ val} #{key}"
+          raise "No method #{val} #{key}"
         end
       end
 
