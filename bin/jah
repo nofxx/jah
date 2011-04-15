@@ -1,11 +1,132 @@
 #!/usr/bin/env ruby
-
-$VERBOSE = true # -w
-$KCODE = "u" # -Ku
-
-# $LOAD_PATH << File.join(File.dirname(__FILE__), *%w[.. lib])
+require "yaml"
+# $VERBOSE = true # -w
+$KCODE = "u" if RUBY_VERSION < "1.9" # -Ku
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
-require "jah"
-include Jah
 
-Jah::Cli.work(ARGV)
+
+#include Jah
+
+def unindent(string)
+  indentation = string[/\A\s*/]
+  string.strip.gsub(/^#{indentation}/, "")
+end
+
+
+def new_cli
+  require 'optparse'
+  require 'fileutils'
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: #{File.basename($0)} [path]"
+
+  opts.on("-h", "--help", "Displays this help info") do
+    puts opts
+    exit 0
+  end
+
+  begin
+    opts.parse!(ARGV)
+  rescue OptionParser::ParseError => e
+    warn e.message
+    puts opts
+    exit 1
+  end
+end
+
+last_arg = ARGV.last
+if ARGV.empty?
+  abort "Please specify the directory to capify, e.g. `#{File.basename($0)} .'"
+elsif !File.exists?(last_arg)
+  abort "`#{last_arg}' does not exist."
+elsif !File.directory?(last_arg)
+  abort "`#{last_arg}' is not a directory."
+elsif ARGV.length > 2
+  abort "Too many arguments; please specify only the directory to capify."
+end
+
+files = {
+    "Capfile" => unindent(<<-FILE),
+FILE
+
+    "config/deploy.rb" => '
+# Shared tasks
+set :application, "set your application name here"
+set :repository, "set your repository location here"
+
+set :scm, :git
+# end',
+
+    "hosts.yml" => '
+ssaint:
+  profile: example
+  distro: archlinux
+  port: 22
+  app: host.com',
+
+    "example/deploy.rb" => '
+FILES = {
+  "foo.conf" => {
+    :dest => "/opt/etc/foo.conf",
+    :perm => 644,
+    :user => "root:root"
+  }
+}
+
+WORK = {
+  :scripts => [],
+  :pkgs => %w{ ruby redis },
+  :gems => [],
+  :npms => []
+}',
+
+    "example/files/foo.conf" => '
+# some conf'
+
+
+  }
+
+base = ARGV.pop
+files.each do |file, content|
+  file = File.join(base, file)
+  if File.exists?(file)
+    warn "[skip] '#{file}' already exists"
+  elsif File.exists?(file.downcase)
+    warn "[skip] '#{file.downcase}' exists, which could conflict with `#{file}'"
+  else
+    unless File.exists?(File.dirname(file))
+      puts "[add] making directory '#{File.dirname(file)}'"
+      FileUtils.mkdir(File.dirname(file))
+    end
+    puts "[add] writing '#{file}'"
+    File.open(file, "w") { |f| f.write(content) }
+  end
+end
+
+puts "[done] presto!"
+end
+
+
+def real_args
+  @@real_args ||= ARGV.select { |a| a !~ /^-/ }
+end
+
+
+case ARGV[0]
+when "new" then new_cli
+when "daemon" then
+  require "jah"
+  Jah::Daemon::CLI.work(ARGV)
+else
+  host = real_args.first
+  ARGV.delete(host)
+  HOSTS = YAML.load(File.open(File.join(".", "hosts.yml")))
+  HOST = HOSTS[host]
+  abort "Can't find host #{host}" unless HOST
+  PROFILES = HOST["profiles"].split(",").map(&:chomp)
+  WORK = {:pkgs => {}, :gems => {}, :npms => {}}
+  FILES = {}
+  require 'capistrano/cli'
+  Capistrano::CLI.execute
+end
+
