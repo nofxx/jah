@@ -27,8 +27,10 @@ describe Jah::Cli do
     Jah::Cli.work([])
   end
 
+  describe "Config files" do
 
-  it "should not write if it wasnt" do
+  it "should not write down if it wasnt changed" do
+    pending
     EM.should_receive(:stop)
     File.should_not_receive(:open)
     Jah::Cli.stop!
@@ -41,7 +43,7 @@ describe Jah::Cli do
     @mf.should_receive(:write).exactly(2).times
     Jah::Cli.stop!
   end
-
+end
 
 
 end

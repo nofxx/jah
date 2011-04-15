@@ -6,6 +6,13 @@ rescue LoadError
   puts "Gem 'i18n' not found, try `gem install i18n`"
   exit
 end
+if RUBY_VERSION >= "1.9"
+class String
+  def to_a
+    lines.to_a
+  end
+end
+end
 #autoload :Drb, "drb"
 require "jah/opt"
 require "jah/cli"

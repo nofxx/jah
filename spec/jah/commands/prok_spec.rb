@@ -49,11 +49,11 @@ describe Prok do
     end
 
     it "should get cpu percentage" do
-      @prok.cpu.should be_close(0.0, 0.01)
+      @prok.cpu.should be_within(0.01).of(0)
     end
 
     it "should get mem percentage" do
-      @prok.mem.should be_close(0.0, 0.01)
+      @prok.mem.should be_within(0.01).of(0)
     end
 
     it "should get the v size" do

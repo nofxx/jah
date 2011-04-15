@@ -33,8 +33,8 @@ module Jah
         val.strip if val
       end #.reject(&:nil?)
       { :url => ary[2], :license => ary[3], :groups => ary[4], :provides => ary[5],
-      :depends => ary[6], :required => ary[8], :size => ary[12], :arch => ary[14],
-      :desc => ary[19]}
+      :depends => ary[6], :required => ary[8], :size => ary[12], :arch => ary[13],
+      :desc => ary[18]}
     end
 
     def install(pkgs)

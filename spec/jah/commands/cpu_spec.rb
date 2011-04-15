@@ -14,16 +14,16 @@ describe Cpu do
       else
         Cpu.should_receive(:"`").with("cat /proc/cpuinfo | grep 'model name' | wc -l").and_return("2\n")
       end
-      Cpu.read[:one].should be_close(0.02, 0.01)
+      Cpu.read[:one].should be_within(0.01).of(0.02)
     end
 
     it "should read five minutes" do
-      Cpu.read[:five].should be_close(0.08, 0.01)
+      Cpu.read[:five].should be_within(0.01).of(0.08)
     end
 
 
     it "should read five minutes" do
-      Cpu.read[:ten].should be_close(0.08, 0.01)
+      Cpu.read[:ten].should be_within(0.01).of(0.08)
     end
 
     it "should find the number of cores" do
@@ -31,11 +31,11 @@ describe Cpu do
     end
 
     it "should calc the med" do
-      Cpu.read[:med].should be_close(0.04, 0.01)
+      Cpu.read[:med].should be_within(0.01).of(0.04)
     end
 
     it "should have a method missing" do
-      Cpu.one.should be_close(0.02, 0.01)
+      Cpu.one.should be_within(0.04).of(0.02)
     end
 
   end

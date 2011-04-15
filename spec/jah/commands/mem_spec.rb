@@ -5,7 +5,7 @@ describe Mem do
 
   describe "Read All" do
     before do
-      Mem.should_receive(:`).with("cat /proc/meminfo").and_return(MEMINFO) #`
+      Mem.should_receive(:"`").with("cat /proc/meminfo").and_return(MEMINFO) #`
     end
 
     it "should get free mem" do

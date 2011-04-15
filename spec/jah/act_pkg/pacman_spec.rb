@@ -77,7 +77,7 @@ describe Pacman do
     end
 
     it "should fetch arch" do
-      @ruby.arch.should eql("i686")
+      @ruby.arch.should eql("x86_64")
     end
 
     it "should fetch desc" do
@@ -115,26 +115,24 @@ QL
 
 QI = <<QI
 Name           : ruby
-Version        : 1.8.7_p174-1
+Version        : 1.9.2_p180-1
 URL            : http://www.ruby-lang.org/en/
 Licenses       : custom
 Groups         : None
-Provides       : None
-Depends On     : gdbm>=1.8.3  db>=4.7.25  openssl>=0.9.8k  zlib>=1.2.3.3 readline>=6
-Optional Deps  : None
-Required By    : rubygems  shoes
-Conflicts With : None
+Provides       : rubygems  rake
+Depends On     : gdbm  db  openssl  zlib  readline  libffi
+Optional Deps  : tk: for Ruby/TK
+Required By    : None
+Conflicts With : rubygems  rake
 Replaces       : None
-Installed Size : 11308.00 K
-Packager       : Allan McRae <allan@archlinux.org>
-Architecture   : i686
-Build Date     : Mon 20 Jul 2009 12:29:57 AM BRT
-Install Date   : Thu 23 Jul 2009 10:47:30 PM BRT
+Installed Size : 18848.00 K
+Packager       : Eric Belanger <eric@archlinux.org>
+Architecture   : x86_64
+Build Date     : Sat 19 Feb 2011 04:27:10 AM BRST
+Install Date   : Tue 29 Mar 2011 01:38:06 AM BRT
 Install Reason : Explicitly installed
 Install Script : No
 Description    : An object-oriented language for quick and easy programming
-
-
 QI
 
 

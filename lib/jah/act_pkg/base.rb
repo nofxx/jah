@@ -35,9 +35,9 @@ module Jah
         BIN + comm
       end
 
-      def run(comm)
-        `#{comm}`
-      end
+      # def run(comm)
+      #   `#{comm}`
+      # end
 
     end
   end
