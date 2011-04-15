@@ -6,8 +6,8 @@
 require "eventmachine"#autoload :Client,
 
 module Jah
-
-  class Cli
+module Daemon
+  class CLI
 
     def self.parse_options(argv)
       options = {}
@@ -20,10 +20,8 @@ jah [command] [opts]
 
 Commands:
 
-   start
-   stop
-   restart
-   config
+   start/stop/restart    Daemon control
+   config                Run install
 
 BANNER
         opts.separator "Config file:"
@@ -54,8 +52,8 @@ BANNER
         opts.separator ""
         opts.separator "Common Options:"
         opts.on("-h", "--help", "Show this message" ) { puts opts; exit }
-        opts.on("-v", "--[no-]verbose", "Turn on logging to STDOUT" ) { |bool| options[:verbose] = bool }
-        opts.on("-V", "--version", "Show version") { |version|  puts Jah::VERSION;  exit }
+        opts.on("-v", "--verbose", "Turn on logging to STDOUT" ) { |bool| options[:verbose] = bool }
+        opts.on("-V", "--version", "Show version") { |version|  puts "Jah #{Jah::VERSION}";  exit }
         opts.separator ""
         begin
           opts.parse!
@@ -70,13 +68,13 @@ BANNER
     private_class_method :parse_options
 
     def self.work(argv)
-      trap(:INT) { stop! }
+      trap(:INT)  { stop! }
       trap(:TERM) { stop! }
 
       Opt.autoload_config(parse_options(argv))
 
       if comm = argv.shift
-        Jah::Agent.send(comm) #rescue puts "Command not found: #{comm} #{@usage}"
+        Jah::Agent.send(comm) rescue puts "Command not found: #{comm} #{@usage}"
       else
         Opt.mode ? Jah::Agent.start : Install.new
       end
@@ -90,4 +88,5 @@ BANNER
 
   end
 
+end
 end

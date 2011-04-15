@@ -1,6 +1,13 @@
+#
+# ActPkg - Say 'install' and it works =D
+#
+# Nice tables:
+# http://distrowatch.com/dwres.php?resource=package-management
+# http://www.guiadohardware.net/dicas/referencia-pacotes-linux.html
+#
 module Jah
 
-  class Pkg
+   class Pkg
     include Comparable
     attr_reader :name, :version, :status, :size
 
@@ -49,4 +56,5 @@ module Jah
       end
     end
   end
+
 end
