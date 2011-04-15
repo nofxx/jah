@@ -1,8 +1,19 @@
 # ![Jah](http://fireho.com/system/jahlogo.png)
 
-Talk to your machines. Like a god.
+Talk to/config your machines. Like a god.
 
 ## Install
+
+
+    gem install jah
+
+
+To create a config repo:
+
+    jah new <path>
+
+
+To create a config file for XMPP:
 
 Just run it for the first time to create a config file.
 Use `jah install` to force the wizard again.
@@ -17,6 +28,11 @@ Jah will try to find a `jah.yaml` file on ~/.jah or /etc.
 * Debian (tested)
 * BSD
 
+Gems required for config mode:
+
+* Capistrano
+
+
 Gems required for XMPP mode:
 
 * Blather
@@ -24,6 +40,46 @@ Gems required for XMPP mode:
 
 
 ## Modes
+
+Jah has two modes you can use separately:
+
+## Config
+
+
+Jah new will create a tree like this:
+
+     |- hosts.yml
+     |- config
+     |  |- deploy.rb
+     |- example
+     |  |- deploy.rb
+     |  |- files/
+     |  |- scripts/
+
+THIS IS ALL SUBJECT TO BIG CHANGE! Some nice DSL coming soon hehe...
+
+### hosts.yml
+
+In hosts.yml, you inform all your servers and which profiles you want in them.
+
+
+### config
+
+Config deploy is just a "system wide" place for your custom tasks.
+
+
+### profile
+
+Example is a sample profile: Deploy works as you might expect,
+you can define tasks and use capistrano syntax all along.
+
+
+
+## Daemon
+
+Notification/command dispatch via XMPP!
+
+
 
 ### XMPP
 
@@ -161,4 +217,4 @@ trivial to work with your services:
 
 ## Copyright
 
-Copyright (c) 2009 Marcos Piccinini. See LICENSE for details.
+Copyright (c) 2011 Marcos Piccinini. See LICENSE for details.
