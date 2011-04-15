@@ -1,89 +1,49 @@
 Capistrano::Configuration.instance(:must_exist).load do
-PROFILES.each { |prof| load File.join(".", prof, "deploy.rb")  }
+  abort("Run with jah") unless Object.const_defined?("PROFILES")
 
-#   role :web, "fireho.com"
-#   role :db,  "fireho.com", :primary => true
-role :app, HOST["app"]
+  # Load all profiles
+  PROFILES.each { |prof| load File.join(".", prof, "deploy.rb")  }
 
+  # Roles
+  #   role :web, "fireho.com"
+  #   role :db,  "fireho.com", :primary => true
+  role :app, HOST["app"]
+
+  # SSH Config
   # ssh_options[:verbose] = :debug
-ssh_options[:port] = HOST["port"] if HOST["port"]
+  ssh_options[:port] = HOST["port"] if HOST["port"]
 
-task :sy do
-  run "pacman -Syu && gem update"
-end
+  namespace :setup do
 
-
-namespace :setup do
-
-  desc "Setups key on remote"
-  task :key do
-    key = ENV['key'] || "~/.ssh/id_rsa.pub"
-    `ssh-copy-id -i #{key} #{app}`
-  end
-
-  desc "Setups a new machine"
-  task :cold do
-    [:scripts, :pkgs, :gems, :npms].each do |i|
-      next unless stuff = WORK[i]
-      send "#{i}_worker", stuff unless stuff.empty?
+    desc "Setups key on remote"
+    task :key do
+      key = ENV['key'] || "~/.ssh/id_rsa.pub"
+      `ssh-copy-id -i #{key} #{app}`
     end
-  end
 
-  desc "Updates all"
-  task :up do
-     run update_command
-     run gems_update if capture("which gem") rescue nil
-     run npms_update if capture("which npm") rescue nil
-  end
+    desc "Setups a new machine"
+    task :cold do
+      [:scripts, :pkgs, :gems, :npms].each do |i|
+        next if (stuff = WORK[i]).empty?
+        send "#{i}_worker", stuff
+      end
+    end
 
-  desc "Updates setups"
-  task :files do
+    desc "Updates all"
+    task :up do
+      run update_command
+      run gems_update if capture("which gem") rescue nil
+      run npms_update if capture("which npm") rescue nil
+    end
+
+    desc "Updates setups"
+    task :files do
       FILES.each do |stack, files|
         up_files stack, files
       end
-  end
-
-end
-
-GROUPS = [:webapp, :db]
-# GOD
-#
-namespace :god do
-  desc "Start all"
-  task :start do
-    GROUPS.each { |stack| send(stack, :start) }
-  end
-  desc "Stop all"
-  task :stop do
-    GROUPS.each { |stack| send(stack, :stop) }
-  end
-  desc "Restart all"
-  task :stop do
-    GROUPS.each { |stack| send(stack, :restart) }
-  end
-  desc "Check status"
-  task :status do
-    v = run "sudo god status"
-    puts v
-  end
-  GROUPS.each do |stack|
-    namespace stack do
-      #desc "Start #{stack} stack"
-      task :start, :roles => :app do
-        run "sudo god start #{stack}"
-      end
-      #desc "Stop #{stack} stack"
-      task :stop, :roles => :app do
-        run "sudo god stop #{stack}"
-      end
-      #desc "Restart #{stack} stack"
-      task :restart, :roles => :app do
-        run "sudo god restart #{stack}"
-      end
     end
-  end
-end
 
+  end
 
   # Tail
   #
@@ -99,7 +59,6 @@ end
   #
   # CODE
   #
-
   def get_stack_path(stack, *args)
     File.join(".", stack, *(args.flatten.map(&:to_s)))
   end

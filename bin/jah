@@ -12,7 +12,7 @@ def unindent(string)
   string.strip.gsub(/^#{indentation}/, "")
 end
 
-
+# From capify
 def new_cli
   require 'optparse'
   require 'fileutils'
@@ -38,7 +38,7 @@ last_arg = ARGV.last
 if ARGV.empty?
   abort "Please specify the directory to capify, e.g. `#{File.basename($0)} .'"
 elsif !File.exists?(last_arg)
-  abort "`#{last_arg}' does not exist."
+  FileUtils.mkdir(last_arg)
 elsif !File.directory?(last_arg)
   abort "`#{last_arg}' is not a directory."
 elsif ARGV.length > 2
@@ -47,6 +47,8 @@ end
 
 files = {
     "Capfile" => unindent(<<-FILE),
+require 'jah/tasks'  # remove this line to skip loading of jah tasks
+load 'config/deploy' # remove this line to skip loading any of the default tasks
 FILE
 
     "config/deploy.rb" => '
@@ -58,11 +60,14 @@ set :scm, :git
 # end',
 
     "hosts.yml" => '
+groups:
+  superapp: ssaint, other
+
 ssaint:
-  profile: example
+  profiles: example
   distro: archlinux
   port: 22
-  app: host.com',
+  app: host.com or ip',
 
     "example/deploy.rb" => '
 FILES = {
@@ -120,11 +125,17 @@ when "daemon" then
 else
   host = real_args.first
   ARGV.delete(host)
-  HOSTS = YAML.load(File.open(File.join(".", "hosts.yml")))
+  conf = YAML.load(File.open(File.join(".", "hosts.yml")))
+  GROUPS = conf.delete("groups")
+  HOSTS = conf
   HOST = HOSTS[host]
-  abort "Can't find host #{host}" unless HOST
+  unless HOST
+    print "Can't find host #{host}, on file:\n-> "
+    puts HOSTS.keys.join(", ")
+    abort
+  end
   PROFILES = HOST["profiles"].split(",").map(&:chomp)
-  WORK = {:pkgs => {}, :gems => {}, :npms => {}}
+  WORK = {:scripts => [], :pkgs => {}, :gems => {}, :npms => {}}
   FILES = {}
   require 'capistrano/cli'
   Capistrano::CLI.execute
