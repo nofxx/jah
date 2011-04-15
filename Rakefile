@@ -1,5 +1,10 @@
 require 'rubygems'
 require 'rake'
+require 'rake/clean'
+require 'rake/rdoctask'
+require 'rspec/core/rake_task'
+
+CLEAN.include('**/*.gem')
 
 begin
   require 'jeweler'
@@ -10,29 +15,23 @@ begin
     gem.email = "x@nofxx.com"
     gem.homepage = "http://github.com/nofxx/jah"
     gem.authors = ["Marcos Piccinini"]
-    gem.add_dependency "blather", '>=0.4.7'
+    gem.add_dependency "capistrano"
+    gem.add_dependency "blather"
     gem.add_dependency "i18n"
     gem.add_development_dependency "rspec"
     # gem.add_development_dependency "rr"
-    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
 end
 
-require 'spec/rake/spectask'
-Spec::Rake::SpecTask.new(:spec) do |spec|
-  spec.libs << 'lib' << 'spec'
-  spec.spec_files = FileList['spec/**/*_spec.rb']
+
+desc "Runs spec suite"
+RSpec::Core::RakeTask.new(:spec) do |spec|
+  spec.pattern = 'spec/*_spec.rb'
+  spec.rspec_opts = ['--backtrace --colour']
 end
 
-Spec::Rake::SpecTask.new(:rcov) do |spec|
-  spec.libs << 'lib' << 'spec'
-  spec.pattern = 'spec/**/*_spec.rb'
-  spec.rcov = true
-end
-
-task :spec => :check_dependencies
 task :default => :spec
 
 begin
