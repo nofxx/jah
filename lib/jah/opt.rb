@@ -25,7 +25,7 @@ module Jah
       end
 
       def defaults
-        { :mode => "xmpp", :daemon => false, :port => 5222 }
+        { :mode => "xmpp", :daemon => false, :port => 5222, :debug => false, :report => false }
       end
 
       def hostname
@@ -76,7 +76,8 @@ module Jah
         elsif !(val = @hash[key]).nil?
           val
         else
-          raise "No method #{val} #{key}"
+          puts "Can't find #{val} #{key} on config file, please run install."
+          exit
         end
       end
 
